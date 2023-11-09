@@ -1,11 +1,13 @@
 # STUDY
 > 개인 공부 기록
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
+기초부터 천천히
+HTML
+CSS
+JAVASCRIPT
+MYSQL
 
-한 두 문단으로 프로젝트 소개 글을 작성합니다.
+
 
 ![](../header.png)
 
