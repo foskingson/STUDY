@@ -6,7 +6,7 @@
 - ['CSS']
 - ['JAVASCRIPT']
 - ['DATABASE'](https://github.com/foskingson/STUDY/tree/main/Database)
-
+- [`CS`](https://github.com/JuHyun419/study/tree/master/computer-science)
 
 
 ![](../header.png)
