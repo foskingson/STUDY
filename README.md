@@ -1,11 +1,11 @@
 # STUDY
 > 개인 공부 기록
 
-기초부터 천천히
-HTML
-CSS
-JAVASCRIPT
-MYSQL
+### 기초부터 천천히
+- ['HTML]
+- ['CSS']
+- ['JAVASCRIPT']
+- ['MYSQL']
 
 
 
