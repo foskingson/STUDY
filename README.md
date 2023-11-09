@@ -5,7 +5,7 @@
 - ['HTML]
 - ['CSS']
 - ['JAVASCRIPT']
-- ['MYSQL']
+- ['DATABASE'] https://github.com/foskingson/STUDY/tree/main/Database
 
 
 
