@@ -46,4 +46,33 @@ function App() {
 ```
 
 <br>
-### state
+### useState
+> 리액트의 hook중 하나로 현재의 state값과 state값을 업데이트하는 함수를 반환하는 함수이다. <br>
+> 현재의 값과 변경하려는 값이 다르면 함수를 변경하려
+> 일반적인 정수나 문자열은 평범하게 useState를 사용하면 되지만 배열과 객체는 다른 작업이 필요하다. 아래코드 참조 <br>
+>> react는 상태관리를 단순화하고 성능을 향상시키기 위해 불변성을 권장한다. 정수나 문자열의 경우 usestate를 사용하면 새값과 이전값을 비교하여
+다시 렌더링이 필요한지 결정한다. 값이 다를경우 react는 구성요소를 업데이트 한다. 그러나 배열과 객체는 불변성을 처리하는 방식이 다르다.
+react는 효율적으로 처리하기 위해 새로운 배열이나 객체를 만들어 처리하도록 권장한다.
+
+```javascript
+function Header(props){	    
+    const [title,setTitle]=useState(props.title);       //  문자열 state의 생성
+    const [topic,setTopic]=useState([html,css,javascript]); // 함수 state 생성
+    setTitle('WEB');    //setTitle 함수를 이용해 바꾸려는 값이 현재와 같은지 비교 후 다르다면 해당 컴포넌트는 값을 변경하고 화면에 다시 렌더링한다
+    const newTopic=[...topic];  // 새로운 배열에 기존 topic배열 복사
+    newTopic.push('WEB');       // 복사된 배열에 'WEB' 추가
+    setTopic(newTopic);         // Topic과 newTopic은 다르기 때문에 해당 컴포넌트는 값을 변경하고 다시 렌더링한다.
+    return <article>
+		
+        
+    </article>
+}
+function App() {
+	
+
+	return (
+		<Header title="react"></Header>	
+	);
+}
+
+```
