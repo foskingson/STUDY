@@ -4,7 +4,7 @@
 ### :blush: 기초부터 천천히 :blush:
 - ['HTML]
 - ['CSS']
-- ['JAVASCRIPT']
+- ['JAVASCRIPT'] (https://github.com/foskingson/STUDY/blob/main/WEB/Javascript.md)
 - [DATABASE](https://github.com/foskingson/STUDY/tree/main/Database)
 
 
