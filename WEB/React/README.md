@@ -19,7 +19,30 @@
 >>3. context : 부모 컴포넌트에서 생성되어 모든 자식 컴포넌트에게 전달하는 데이터이다. <br> 
 상위 컴포넌트가 하위 컴포넌트에 props를 사용하지 않고 필요한 데이터를 넘길수 있다. (props drilling 방지 가능) <br> 
 >> * props drilling: 하위계층에 props를 전달하기 위해 props가 필요없는 계층에도 props를 전달하는것
-```javascript
+>```
+function Header(props){	    //상위 컴포넌트에서 받은 타이틀의 값을 props에 저장
+    const [title,setTitle]=useState(props.title);   
+    return <article>
+		<input type="button" value="button" onClick={event=>{   // 버튼을 클릭했을때 타이틀을 출력하고 조건문에 따라 타이틀을 바꿈
+			event.preventDefault();
+			alert(title);
+			if(title==="react"){
+				setTitle('WEB');
+			} else if(title==="WEB"){
+				setTitle('react');
+			}
+		}}/>
+    </article>
+}
+function App() {
+	
 
-
+	return (
+		<Header title="react"></Header>	// Header컴포넌트를 불러오고 하위 컴포넌트에게 타이틀의 값 전달
+	);
+}
+// 자바스크립트와 다르게 react에서는 onChange는 값을 입력할때마다 이벤트 발생 
 ```
+
+<br>
+### state
