@@ -9,3 +9,4 @@ function set_screen_color(self){
         self.value='밤';
     }
 }
+

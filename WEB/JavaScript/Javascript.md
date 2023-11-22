@@ -49,3 +49,25 @@ function showAll(){
     showAll 이라는 함수 생성
 }
 ```
+
+### 최대한 중복을 없애서 깔끔한 코드 만들기 (리팩토링)
+
+
+### 객체
+> 요소(property)로 구성된 집합으로 요소는 키(key)와 값(value)으로 이루어져있다.
+> 함수로 객체를 생성하기도 하며, 함수 자체가 객체이기도 하다.
+```javascript
+const home{
+    father: aaa             // home.father로 home이라는 객체안의 father의 키값을 참조할수 있다.
+    mother: bbb
+    me : function(){        //객체안에 있는 함수를 메소드라고 한다
+        alert('ccc');   
+    }
+}
+
+const topic=[               // 이런식으로 객체배열도 생성가능하다
+    {id:1 , title:'코딩 기록', body:'코딩은 어려워..'},
+    {id:2 , title:'헬스 기록', body:'헬스는 어려워..'},
+    {id:3 , title:'운전 기록', body:'운전은 어려워..'},
+];
+```
