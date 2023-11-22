@@ -18,7 +18,7 @@
 >>2. state : 컴포넌트의 내부에서 변경 가능한 데이터를 관리할때 사용한다.
 >>3. context : 부모 컴포넌트에서 생성되어 모든 자식 컴포넌트에게 전달하는 데이터이다. <br> 
 상위 컴포넌트가 하위 컴포넌트에 props를 사용하지 않고 필요한 데이터를 넘길수 있다. (props drilling 방지 가능) <br> 
-* props drilling: 하위계층에 props를 전달하기 위해 props가 필요없는 계층에도 props를 전달하는것
+>> * props drilling: 하위계층에 props를 전달하기 위해 props가 필요없는 계층에도 props를 전달하는것
 ```javascript
 
 
