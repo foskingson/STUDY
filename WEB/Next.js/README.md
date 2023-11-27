@@ -25,7 +25,8 @@
 <br>
 
 ###  useEffect
-+ import { useEffect } from "react"; //추가해서 사용
+
++ `import { useEffect } from "react"; //추가해서 사용`
 
 
 
