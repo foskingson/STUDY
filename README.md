@@ -9,6 +9,8 @@
 - [DATABASE](https://github.com/foskingson/STUDY/tree/main/Database)
 
 
+마크다운 이모지 단축키 : 윈도우키+마침표(.)
+
 
 ![](../header.png)
 
