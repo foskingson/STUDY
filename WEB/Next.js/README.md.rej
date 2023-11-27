@@ -1,0 +1,25 @@
+diff a/WEB/Next.js/README.md b/WEB/Next.js/README.md	(rejected hunks)
+@@ -11,4 +11,23 @@
+     - 두 컴포넌트를 혼합하려면 파일을 분리해서 컴포넌트를 불러와야한다.<br>
+ 
+ <br>
++
+ ## 공부하면서 알아낸 내용들
++
++<br>
++
++### <Link>
++- 하나의 페이지에서 모든 작업을 처리하는 앱을 구현하게 해준다 SPA(single page application)<br>
++- 파일 상단에 import Link from 'next/link'를 추가해 사용한다<br>
++- 링크를 클릭했을때 매번 전체페이지를 다운로드 a태그와 다르게 Link태그는 링크를 클릭했을때 필요한 항목만 다운로드받고 방문한 페이지는 다시 다운로드 받지 않아서 더 빠르다.
++    - 필요한 항목이라는게 현재 페이지와 링크페이지의 다른 부분들이다. <br>
++
++<br>
++
++###  useEffect
+++ import { useEffect } from "react"; //추가해서 사용
++
++
++
++// useEffect 함수는 컴포넌트가 렌더링될때마다 특정작업을 할수 있게 해주는 HOOK이다
++// useEffect는 컴포넌트가 마운트,언마운트,업데이트 됐을때 특정 작업을 처리할수 있다.
