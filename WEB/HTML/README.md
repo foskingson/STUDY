@@ -1,4 +1,4 @@
-# HTML :yellow_book:
+# HTML :page_with_curl:
 - HTML은 웹페이지를 생성하고 구성하기 위한 표준 마크업 언어이다.
 
 <br>
