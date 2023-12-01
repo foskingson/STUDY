@@ -54,3 +54,52 @@
     <li>Item 2</li>
 </ol>
 ```
+<br>
+
+### a 태그
+- 링크된 주소로 연결해주는 태그이다. <br>
++ `<a href="https://example.com">Visit Example.com</a>`  <br>
+<br>
+
+
+### img 태그
+- 웹페이지에 이미지를 보여주는 태그이다. <br>
++ `<img src="image.jpg" alt="이미지 설명">`  <br>
+<br>
+
+
+### form 태그
+- form 태그는 데이터를 입력받아 해당 데이터를 서버에 제출한다. <br>
+- action 속성 : 데이터가 전달될 URL을 지정한다. <br>
+- method 속성 : 양식을 제출할때  사용할 HTTP 메서드이다 <br>
+    - 일반적인 메서드 값으로 get과 post가 있다.  <br>
+    - get : 256~4096 byte까지만 전송 가능하고 url에 데이터를 추가해서 보낸다. <br>
+    - post : 길이 제한이 없고 body에 데이터를 추가해서 보낸다.<br>
+``` HTML
+<form action="/submit" method="post">
+        <!-- action: 폼 데이터가 전송될 서버의 URL을 지정합니다. -->
+        <!-- method: 폼 데이터를 서버로 전송하는 HTTP 메소드를 지정합니다. (get 또는 post) -->
+
+        <!-- 텍스트 입력 필드 -->
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" placeholder="사용자 이름을 입력하세요">
+
+        <!-- 비밀번호 입력 필드 -->
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요">
+
+        <!-- 체크박스 -->
+        <input type="checkbox" id="subscribe" name="subscribe" value="yes">
+        <label for="subscribe">뉴스레터 구독</label>
+
+        <!-- 라디오 버튼 -->
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">남성</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">여성</label>
+
+        <!-- 제출 버튼 -->
+        <button type="submit">제출</button>
+    </form>
+```
+<br>
