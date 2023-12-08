@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.1.1/redux.min.js"></script>
+
+
+</head>
+
+<body>
+    <div id="hi"></div>
+    <div id="list"></div>
+    <div id="bu"></div>
+    <div id="text"></div>
+
+    <script>
+        function reducer(state,action){
+            
+            if(state===undefined){
+                return{
+                    mode:'welcome',
+                    selected_id:1,
+                    contents:[
+                        {id:1,title:'html',desc:'html is...'},
+                        {id:2,title:'css',desc:'css is...'},
+                        {id:3,title:'js',desc:'js is...'}
+                    ]
+                }
+            }
+
+            var newState={};
+            if(action.type==='SELECT'){
+                newState=Object.assign({},state,{selected_id:action.id,mode:'read'});
+            }
+
+            if(action.type==='CHANGE_MODE'){
+                newState=Object.assign({},state,{mode:action.mode});
+                
+            }
+
+            if(action.type==='CREATE'){
+                newContents=state.contents.concat()      //배열을 복제할땐 concat
+                newContents.push({id:action.id, title:action.title, desc:action.desc})
+                newState=Object.assign({},state,{
+                    contents:newContents,
+                    mode:'read'
+                });
+            }
+
+            if(action.type==='DELETE'){
+                var i=0;
+                var newcontents=[];
+                while(state.contents.length>i){
+                    if(state.selected_id!==state.contents[i].id){
+                        newcontents.push(state.contents[i])
+                    }
+                    i=i+1;
+                }
+                newState=Object.assign({},state,{
+                    contents:newcontents,
+                    mode:'welcome'
+                });
+
+            }
+
+            return  newState
+        }
+        
+       
+        var store= Redux.createStore(reducer);
+    </script>
+
+    
+    <script>    // hi
+        function hi() {
+            document.querySelector(`#hi`).innerHTML = `
+              <header>
+                <h1>WEB</h1>
+                <div>Hello, WEB<div>
+              </header>
+
+                `
+        }
+        
+    </script>
+
+
+    <script>    // list
+        function list() {
+            var state=store.getState();
+            var i=0;
+            var litags='';
+            while(i<state.contents.length){
+                litags=litags+`
+                <li>
+                    <a onclick="
+                        event.preventDefault();
+                        var action= {type:'SELECT' , id: ${state.contents[i].id}, mode:'read'}       ;
+                        store.dispatch(action)   
+                    " href="${state.contents[i].id}.html">
+                        ${state.contents[i].title}
+                    </a>
+                </li>`
+                i=i+1;
+            }
+
+            document.querySelector(`#list`).innerHTML = `
+            <nav>
+                <ol>
+                    ${litags}
+                </ol>
+            </nav>
+                `
+        }
+        
+    </script>
+
+    <script>    // bu
+        function bu() {
+            var state=store.getState();
+            console.log(state.selected_id)
+            document.querySelector(`#bu`).innerHTML = `
+                    <input type="button" value="create" onclick="     
+                        store.dispatch({type:'CHANGE_MODE' , mode:'create'})
+                    ">
+                    
+                    <input type="button" value="delete" onclick="
+                        store.dispatch({type:'DELETE'})
+
+                    ">
+             `
+        }
+        
+    </script>
+
+    <script>    // text
+
+        function text() {
+            var state=store.getState();
+           
+            var last_id=state.contents.length+1;
+          
+            
+            if(state.mode === 'read'){
+                var i = 0;
+                var aTitle, aDesc;
+                while(i < state.contents.length){
+                    if(state.contents[i].id === state.selected_id) {
+                        aTitle = state.contents[i].title;
+                        aDesc = state.contents[i].desc;
+                        break;
+                    }
+                    i = i + 1;
+                }
+                document.querySelector('#text').innerHTML = `
+                <article>
+                    <h2>${aTitle}</h2>
+                    ${aDesc}
+                </article>
+                `
+            }
+
+            else if(state.mode==='create'){ // onsubmit할때 안에 함수만들지 말기
+                document.querySelector(`#text`).innerHTML = `
+                <article>
+                    <form onsubmit="
+                        event.preventDefault();
+                        var _title = this.title.value;
+                        var _desc = this.desc.value;
+                        store.dispatch({
+                            type:'CREATE',
+                            id:${last_id},
+                            title:_title,
+                            desc:_desc
+                        })
+                    ">
+                        <p><input type="text" name="title" placeholder="title" /></p>
+                        <p><textarea name="desc" placeholder="설명"></textarea></p>
+                        <p><input type="submit" value="제출"  /></p>
+                    </form>
+                </article>        
+            `
+            }  
+            
+            if(state.mode === 'welcome'){
+                document.querySelector('#text').innerHTML = `
+                <article>
+                    <h2>welcome</h2>
+                    hi
+                </article>
+                `
+            }
+            
+            
+            
+            
+        }
+        
+    </script>
+
+    <script>
+        var state=store.getState();
+        hi();
+        bu();
+        
+        store.subscribe(list);
+        list();
+        store.subscribe(text);
+        text();
+
+    </script>
+
+   
+
+    
+
+</body>
+
+</html>
