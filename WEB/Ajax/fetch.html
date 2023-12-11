@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <article>
+
+        </article>
+
+        <input type="button" value="fetch" onclick="
+            fetch('css')    // 서버에 css파일에 대한 응답을 요청함
+            .then(resp=>resp.text())   // 응답이 성공적으로 끝나면 response객체를 받아 문자열로 변환 (then을 통해 비동기처리를 시켜줌)
+            .then(text=>{              //  문자열로 변환된걸 result 객체로 받아 아래의 함수를 실행한다
+                alert(text);
+                document.querySelector('article').innerHTML=text;
+            })
+            
+        ">
+    </body>
+
+</html>
+

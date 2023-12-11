@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>WEB1 - Welcome</title>
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="colors.js"></script>
+
+
+</head>
+
+<body>
+  <h1><a href="index.html">WEB</a></h1>
+  <input id="night_day" type="button" value="night" onclick="
+    nightDayHandler(this);
+  ">
+  <ol id="nav">
+    
+  </ol>
+  <article>
+
+  </article>
+
+  <script>
+    function fetchPage(item){  //fetch의 함수화
+      fetch(item)    // 서버에 해당 파일에 대한 응답을 요청함
+                .then(resp=>resp.text())   // 응답이 성공적으로 끝나면 response객체를 받아 문자열로 변환 (then을 통해 비동기처리를 시켜줌)
+                .then(text=>{              //  문자열로 변환된걸 result 객체로 받아 아래의 함수를 실행한다                    
+                    document.querySelector('article').innerHTML=text;
+                })
+    }
+    
+    if(location.hash){  //해쉬뱅을 이용해 구현한 방식
+      fetchPage(location.hash.substr(2));
+    }else{
+      fetchPage('welcome');
+    }
+
+    fetch('list') // list파일을 만들어 추가 및 수정에 있어서 자유롭게 할수 있다
+      .then(resp=>resp.text())
+      .then(res=>{
+        //<li><a href="#!html" onclick="fetchPage('html')">HTML</a></li> 
+        var items=res.split(',');
+        var i=0;
+        var navHTML='';
+
+        while(i<items.length){
+          var item=items[i];    
+          item=item.trim();   //item 앞뒤쪽에 trim을 사용해서 공백이나 줄바꿈을 없앨수 있다.
+          navHTML += `
+          <li><a href="#!${item}" onclick="fetchPage('${item}')">${item}</a></li>
+          `;
+
+
+          i=i+1;
+        }
+   
+        document.querySelector('#nav').innerHTML=navHTML;
+      })
+  </script>
+</body>
+
+</html>
