@@ -125,6 +125,49 @@ connection.end();
     -  타사 미들웨어 : Express 기능을 확장하기 위해 타사 개발자가 개발한 미들웨어로  요청 본문 구문 분석을 위한 body-parser, 보안을 위한 HTTP 헤더 설정을 위한 helmet 등이 있다.
     -  맞춤형 미들웨어 : 직접 맞춤형 미들웨어를 만들어 코드의 양을 줄일수 있다.
 - nodejs_express 폴더 안의 main.js 파일을 통해 간단한 미들웨어 사용 예시를 확인 할수 있다.
+
+<br>
+
+### 쿠키
+- 쿠키는 사용자가 웹사이트를 방문했을 때 웹사이트가 사용자의 기기에 저장하는 작은 데이터 조각이다.
++ `npm install -s cookie` 쿠키를 핸들링하는 모듈로 설치하여 사용할 수 있다.
+- 쿠키의 기능
+    - 인증: 쿠키는 사용자의 로그인 정보를 기억하는 데 사용될 수 있으며, 사용자가 페이지를 탐색할 때 로그인 상태를 유지하는 데 도움이 된다.
+    - 개인화: 웹사이트는 쿠키를 사용하여 언어 설정, 글꼴 크기 및 기타 사용자 정의 요소와 같은 사용자의 기본 설정을 기억할 수 있다.
+    - 추적 및 분석: 쿠키는 일반적으로 사용자 행동을 추적하고 분석 데이터를 수집하는 데 사용된다. 웹사이트 소유자는 이 정보를 사용하여 사용자가 사이트와 상호 작용하는 방식을 분석하여 개선 및     최적화에 대한 정보를 얻을 수 있다.
+    - 장바구니: 전자 상거래에서는 사이트의 여러 페이지를 탐색할 때 장바구니에 있는 항목을 기억하기 위해 쿠키가 사용된다.
+    - 광고: 쿠키는 타겟 광고에서 중요한 역할을 한다. 광고주는 이를 사용하여 귀하의 온라인 행동을 추적하고 귀하의 관심사와 관련성이 더 높은 광고를 표시한다.
+- 쿠키의 종류
+    - 세션 쿠키 : 브라우저를 껐다 키면 사라진다
+    - 영구 쿠키 : 설정한 기간동안 유지되는 쿠키로 브라우저를 닫았다 열어도 쿠키가 저장된다.
+
+    ``` javascript
+    // 간단한 쿠키 생성 예시
+    var cookie = require('cookie');
+
+    var http = require('http');
+    http.createServer(function(request, response){
+        if(request.headers.cookie!==undefined){ // 쿠키값이 없을때 에러나는것을 대비
+            var cookies = cookie.parse(request.headers.cookie)  // request 헤더에 있는 쿠키를 객체화 시켜줌
+            console.log(cookies) 
+        }
+        
+        response.writeHead(200, {  // 헤더 작성
+            'Set-Cookie':['aacookie=aa', 'bbcookie=bb'] ,   // 세션쿠키 생성
+            'Set-Cookie':[`permanent=cookie; Max-Age=${600000}`], // permanent 쿠키 생성 뒤에 Max-Age를 통해 600000초동안 쿠키가 살아있게 기간을 지정할수 있다.
+            'Set-Cookie':[`secure=secure; Secure`],     // Secure을 통해 https에서만 쿠키를 사용할수 있도록함 쿠키값 탈취등의 보안문제방지를 위해 사용
+            'Set-Cookie':[`http=http; HttpOnly`],       // HttpOnly를 통해 document.cookie와 같은 자바스크립트코드로 접근할수 없게 할수 있다. 보안문제 방지로 사용
+            'Set-Cookie':[`path=path; path=/cookie`],   // path를 지정해 해당 경로에서만 쿠키가 생성되게 할수있다.
+            'Set-Cookie':[`domain=o2.org; Domain=o2.org`] // 'Domain' 속성은 쿠키가 특정 도메인과 그 하위 도메인에 액세스할 수 있도록 하는 데 사용된다.
+            
+        });    
+
+        
+        response.end('Cookie!!'); 
+    }).listen(3000);
+    ```
+
+
 <br>
 <br>
 
@@ -135,7 +178,7 @@ connection.end();
 - package.json의 "dependecies" 부분을 통해 다른 곳에서 가져와 사용된 라이브러리를 확인할수 있다. <br>
 - msa 아키텍처는 서버를 분산해 개발해 더 적은 단위로 서비스를 분리하므로 서비스간 의존선을 낮추고 유연하고 확장성 높은 아키텍처이다. 다만 복잡도가 높고 서비스 간 통신의 관리가 어렵다. <br>
 - 템플릿엔진을 이용하면 더 쾌적하게 개발할수있다. 더적은코드를 사용할수도 있고 html에 제어문을 사용할수도있다. <br>
-
+- HTML 5에서는 쿠키에 의존하지 않고 로컬저장소나 세션저장소를 통해 브라우저를 닫았다 열어도 키값 쌍으로 데이터를 저장할수도 있다. <br>
 
 
 
