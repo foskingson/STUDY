@@ -2,10 +2,7 @@
 > 개인 공부 기록
 
 ### :blush: 기초부터 천천히 :blush:
-- ['HTML]
-- ['CSS']
-- [JAVASCRIPT](https://github.com/foskingson/STUDY/blob/main/WEB/JavaScript/README.md)
-- [React](https://github.com/foskingson/STUDY/blob/main/WEB/React/README.md)
+- [WEB](https://github.com/foskingson/STUDY/tree/main/WEB)
 - [DATABASE](https://github.com/foskingson/STUDY/tree/main/Database)
 
 
