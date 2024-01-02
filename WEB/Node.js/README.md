@@ -207,7 +207,20 @@ connection.end();
     
     app.listen(3000)
     ```
-    
+<br>
+
+### passport
+- Passport는 Node.js 애플리케이션의 인증을 위한 미들웨어이다
++ `npm install -s passport` passport 모듈 설치
+- 회원가입과 로그인은 직접 구현할 수 있지만 복잡한 작업이 많은데 다양한 인증과정, 즉 passport의 Strategy(전략)을 사용하여 로그인과 회원가입을 구현 할 수 있다.
+- passport의 전략
+    - 로컬 전략 : 사용자가 애플리케이션 데이터베이스에 로컬로 저장된 사용자 이름과 비밀번호를 사용하여 인증할 수 있다.
+    - Oauth 전략 : passport는 Google, Facebook, Twitter, GitHub 등과 같은 다양한 OAuth 공급자를 지원한다. 개발자는 사용자가 이러한 타사 서비스에서 자신의 계정을 사용하여 로그인할 수 있도록 OAuth 인증을 구현할 수 있다.
+    - 추가로 OpenID Connect 전략, JWT(JSON 웹 토큰) 전략, 익명 전략 등이 있다.
+- nodejs_express_passport폴더안의 코드를 통해 로컬전략을 확인할 수 있다.
+
+
+
 
 
 <br>
@@ -222,6 +235,7 @@ connection.end();
 - 템플릿엔진을 이용하면 더 쾌적하게 개발할수있다. 더적은코드를 사용할수도 있고 html에 제어문을 사용할수도있다. <br>
 - HTML 5에서는 쿠키에 의존하지 않고 로컬저장소나 세션저장소를 통해 브라우저를 닫았다 열어도 키값 쌍으로 데이터를 저장할수도 있다. <br>
 + nodemon을 이용해 재시작 없이 코드를 반영할수 있다. `npm install nodemon --save-dev` 설치후 package.json의 스크립트부분을 편집하고 사용한다.
+- OAuth(Open Authorization)는 웹 및 모바일 애플리케이션을 위한 개방형 표준 인증 프로토콜로 이는 서로 다른 웹 서비스 간에 사용자 정보를 안전하게 교환하기 위한 것이다.. OAuth는 주로 카카오톡,네이버,구글 등 소셜미디어 및 다른 웹서비스에서 사용자 인증 및 권한 부여를 위해 사용된다.
 
 
 
