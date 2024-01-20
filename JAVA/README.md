@@ -20,13 +20,13 @@
 ## 입출력
 #### 입력 
 - Scanner : 콘솔, 파일 또는 문자열과 같은 다양한 소스에서 입력을 읽는 데 사용한다.
-    1.`import java.util.Scanner;` 스캐너의 클래스를 가져온다
-    2.`Scanner scanner = new Scanner(System.in);` 스캐너의 인스턴스를 생성한다. 생성자는 적절한 입력스트림을 전달한다. 여기서 System.in는 일반적으로 콘솔 입력용 키보드인 표준 입력 스트림이다.
-    3.`String name = scanner.nextLine();` 입력을 받는다.
+    1. `import java.util.Scanner;` 스캐너의 클래스를 가져온다
+    2. `Scanner scanner = new Scanner(System.in);` 스캐너의 인스턴스를 생성한다. 생성자는 적절한 입력스트림을 전달한다. 여기서 System.in는 일반적으로 콘솔 입력용 키보드인 표준 입력 스트림이다.
+    3. `String name = scanner.nextLine();` 입력을 받는다.
         - nextLine(): 입력 라인을 문자열로 읽는다.
         - nextInt(): 다음 토큰을 정수로 읽는다.
         - nextDouble(): 다음 토큰을 double로 읽는다.
-    4.`scanner.close();` 입력 작업을 완료하고 시스템 리소스를 확보하기위해 scanner개체를 닫는다.
+    4. `scanner.close();` 입력 작업을 완료하고 시스템 리소스를 확보하기위해 scanner개체를 닫는다.
 
 
 ### new 
