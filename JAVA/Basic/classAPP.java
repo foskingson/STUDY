@@ -6,6 +6,6 @@ class test{
 
 public class classAPP {
     public static void main(String[] args) {
-        test.hi();
+        fos.hi();
     }
 }
