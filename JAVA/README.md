@@ -30,6 +30,64 @@ JVM은 각 플랫폼에 맞게 포팅되어야 하므로 플랫폼 종속적이�
 <br>
 <br>
 
+## 변수 네이밍 규칙
+- 저장할 값에 어울리는 이름
+- 밑줄,문자,숫자 사용가능 / 공백 불가능
+- 밑줄 또는 문자로 시작가능 / 숫자 불가능
+- 한 단어 또는 2개이상 단어의 연속
+- 소문자로 시작하고 뒤에 연속으로 나오는 단어의 시작글자는 대문자로 작성
+- 예약어 사용 불가 (ex : int, public, static,....)
+
+<br>
+<br>
+
+## 상수 final
+- 변수와 달리 상수는 지정하면 변경할 수 없다. 코드의 견고성,유지관리 용이성을 향상시킬 수 있다.
+``` java
+final int constantValue = 42;
+// constantValue=1; // 오류, 상수는 변경할 수 없다
+```
+
+<br>
+<br>
+
+## 형변환
+- 정수형에서 실수형, 실수형에서 문자열 등으로 형변환이 가능하다.
+``` java
+// 정수에서 실수로
+int score = 93;
+System.out.println(score); // 93
+System.out.println((float) score); // 93.0
+System.out.println((double) score); // 93.0
+// 실수에서 정수로
+float score_f = 93.3F;
+double score_d = 98.8;
+System.out.println((int) score_f); // 93
+System.out.println((int) score_d); // 98
+
+// 변수에 형변환된 데이터 집어넣기
+double convertedScoreDouble = score; // 191 -> 191.0
+// int -> long -> float -> double (자동 형변환) // int보다 double이 큰 범위 이기때문에 형변환된 데이터를 집어도 자동으로 형변환된다.
+
+// 숫자를 문자열로
+String s1 = String.valueOf(93);
+s1 = Integer.toString(93);
+System.out.println(s1); // 93
+
+String s2 = String.valueOf(98.8);
+s2 = Double.toString(98.8);
+System.out.println(s2); // 98.8
+
+// 문자열을 숫자로
+int i = Integer.parseInt("93");
+System.out.println(i); // 93
+double d = Double.parseDouble("98.8");
+System.out.println(d); // 98.8
+
+```
+
+
+
 ## 입출력
 ### 입력 
 - Scanner : 콘솔, 파일 또는 문자열과 같은 다양한 소스에서 입력을 읽는 데 사용한다.
@@ -80,6 +138,7 @@ JVM은 각 플랫폼에 맞게 포팅되어야 하므로 플랫폼 종속적이�
 - equals라는 메서드는 내용(값)이 같은지 비교할 수 있다.
 - 정수나 문자와 같은 원시데이터를 비교할때는 ==(동등비교연산자)를 사용하고 그게 아닌 배열과 같은 데이터를 비교할때는 equals를 사용한다
     - 다만 예외로  new를 사용하지 않는 문자열은 동등비교연산자를 사용한다
+- equalsIgnoreCase()를 사용하면 대소문자 구분없이 문자열이 같은지 확인가능하다.
 <br>
 <br>
 
@@ -91,6 +150,18 @@ JVM은 각 플랫폼에 맞게 포팅되어야 하므로 플랫폼 종속적이�
 <br>
 <br>
 
+## Do While
+- while문과 비슷한 반복문이지만 do-while문은 조건문이 참이든 거짓이든 적어도 한번은 내부코드를 실행해준다.
+``` java
+i=1
+
+do {
+    System.out.println(i);
+} while(i==2);  // 조건이 맞지 않지만 한번은 실행한다.
+```
+
+<br>
+<br>
 
 ## 메서드 (Method)
 - 자바에서 메서드는 특정 작업을 수행하는 코드 블록이며 함수라고도 불린다. 클래스 또는 인터페이스 내에 정의된다.
@@ -103,6 +174,7 @@ JVM은 각 플랫폼에 맞게 포팅되어야 하므로 플랫폼 종속적이�
     3. substring(int BeginIndex): 지정된 인덱스에서 시작하는 하위 문자열을 반환합니다. `a.substring(2)`  0~1까지를 제외한  "2345" 반환
     4. indexOf(String str): 지정된 하위 문자열이 처음 나타나는 인덱스를 반환합니다. `a.indexOf('2')` '2'가 처음으로 등장하는 인덱스 2 반환 
     5. contains() : 안에 있는 문자열이 들어있는 문자열이면 true아니면 false반환한다. `a.contains("23")` 들어있는 문자열임으로 true 반환
+    6. replace() : 안에 있는 문자열을 변환해준다. `a.replace("123","321");` => a는 "032145"로 변환됨
     
 - Arrays 클래스 / `import java.util.Arrays;` / 아래 나오는 b에는 [1,2,3,4,5]가 들어있다고 가정 (int[] b = [1,2,3,4,5])
     1. toString(array): 배열의 문자열 표현을 반환합니다.  `Arrays.toString(b)` [1,2,3,4,5] => "12345"
@@ -231,6 +303,110 @@ public class Car {
     - 기본 액세스 수준은 동일한 패키지 내에서만 액세스를 허용하므로 종종 "package-private"이라고도 합니다.
 4. private : private으로 선언된 멤버는 동일한 클래스 내에서만 접근 가능하다.
 
+<br>
+<br>
+
+## 상속
+- a클래스가 있을때 b클래스가 a클래스를 상속받아 a클래스의 기능을 사용할 수 있게 해준다. (코드의 재사용성)
+- 상속을 통해 기존 클래스의 수정 없이 유지보수를 할 수 있기 때문에 확장성이 좋다.
+- 부모 클래스가 생성자함수를 가지고 있다면 자식 클래스도 생성자함수를 작성해야한다.
+- 자식클래스에서 super를 통해 부모클래스의 변수나 메서드를 참조할수 있다.
+    + `super.x` 는 부모클래스의 x라는 변수를 참조한다.
+    + `super(x)` 는 부모클래스의 생성자를 호출한다.
++ `class 서브클래스 extends 부모클래스` 와 같이 사용할 수 있다.
+- 오버라이딩(Overriding) : 부모-자식 상속 관계에 있는 클래스에서 상위 클래스의 메서드를 하위 클래스에서 재정의하는 것을 말한다.
+``` java
+// 슈퍼(부모)클래스
+class Animal {
+    // 모든 동물의 공통 속성
+    String name;
+
+    // Animal 클래스의 생성자
+    Animal(String name) {
+        this.name = name;
+    }
+
+    // 동물 소리를 내는 메서드
+    void makeSound() {
+        System.out.println("어떤 일반적인 동물 소리");
+    }
+}
+
+// 슈퍼클래스 Animal을 상속하는 서브(자식)클래스
+class Dog extends Animal {
+    // 강아지에게 특유의 속성
+    String breed;
+
+    // Dog 클래스의 생성자
+    Dog(String name, String breed) {
+        // 슈퍼클래스 (Animal)의 생성자 호출
+        super(name);    // super를 통해 부모클래스를 참조할 수 있다.
+        this.breed = breed;
+    }
+
+    // 강아지용 makeSound 메서드 오버라이딩
+    @Override // 메소드를 오버라이드(재정의)할 때 사용
+    void makeSound() {
+        System.out.println("멍멍!");
+    }
+
+    // 강아지에게 특유의 메서드
+    void fetch() {
+        System.out.println("강아지가 공을 가져옵니다");
+    }
+}
+
+public class InheritanceExample {
+    public static void main(String[] args) {
+        // 슈퍼클래스 (Animal)의 인스턴스 생성
+        Animal genericAnimal = new Animal("일반 동물");
+        genericAnimal.makeSound(); // Animal의 makeSound 메서드 호출
+
+        // 서브클래스 (Dog)의 인스턴스 생성
+        Dog myDog = new Dog("버디", "래브라도");
+        myDog.makeSound(); // Dog의 오버라이딩된 makeSound 메서드 호출
+        myDog.fetch(); // Dog의 fetch 메서드 호출
+
+        // 서브클래스 인스턴스를 통해 슈퍼클래스의 속성에 접근
+        System.out.println("강아지의 이름: " + myDog.name);
+        System.out.println("강아지의 종: " + myDog.breed);
+    }
+}
+
+```
+
+<br>
+<br>
+
+## 오버로딩과 오버라이딩 
+- 오버로딩 : 메서드 오버로딩을 사용하면 클래스에 이름은 같지만 매개변수(유형, 번호 또는 순서)가 다른 여러 메소드가 있을 수 있다. (상속과 관련 없음)
+``` java
+class Calculator {  // 오버로딩의 예
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+```
+
+- 오버라아딩 : 메소드 오버라이딩을 사용하면 하위 클래스가 상위 클래스에서 이미 제공한 메소드의 특정 구현을 수정하여 제공할 수 있다. (상속에 관련됨)
+``` java 
+class Animal {  // 오버라이딩의 예
+    void makeSound() {
+        System.out.println("Some generic animal sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void makeSound() {
+        System.out.println("Woof! Woof!");
+    }
+}
+```
 
 
 <br>
