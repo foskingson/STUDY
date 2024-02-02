@@ -125,7 +125,7 @@ var app = http.createServer(function(request,response){ //nodejs로 웹서버의
         var title= post.title;
         var desc=post.desc;
         fs.writeFile(`./data/${title}`,desc,'utf-8',function(err){  // 파일을 생성
-          response.writeHead(302, {Location : 'http://localhost:3000/'}); //http 상태코드 302 리다이렉션 지정된 위치로 이동
+          response.writeHead(302, {Location : 'http://localhost:3001/'}); //http 상태코드 302 리다이렉션 지정된 위치로 이동
           response.end(`success`);
         })
         // 리다이렉션 : 어떠한 처리를 한 다음에 다시 다른 페이지로 보내는것
