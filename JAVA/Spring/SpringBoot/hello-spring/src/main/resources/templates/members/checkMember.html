@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div class="container">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>이름</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="member : ${members}">  <!-- member에다가 members의 값을 넣어줌 -->
+                        <td th:text="${member.id}"></td>    <!-- member.id라고만 해도 Thymeleaf를 통해 member.getId()랑 같은효과를 얻을수 있다.-->
+                        <td th:text="${member.name}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div> <!-- /container -->
+</body>
+
+</html>
