@@ -86,13 +86,120 @@
 ```
 
 
+### DFS/BFS
+- DFS(깊이우선탐색) : 한가지의 길로 최대한 깊이 탐색한후 더 깊이 갈 곳이 없을 경우 역추적(다른분기로 이동)하여 탐색한다.
+    - 모든 노드를 방문하려 할때 사용한다.
+    -  DFS에서 재귀 호출이 너무 깊어져 호출 스택이 과도하게 커져 시스템이 스택 공간을 모두 사용하게 되는 스택 오버플로우를 조심해야 한다.
+    - 스택 데이터 구조를 통해 수행한다. 후입선출(LIFO) 방식
+- BFS(너비우선탐색) : 루트 혹은 임의의 노드에서 시작하여 이웃노드로 이동하기전에 모든 이웃을 탐색한다. 가까운 노드부터 멀리있는 노드까지 차례대로 모두 순회하는 방식이다.
+    - 두 노드사이의 최단 경로를 찾을때 사용한다.
+    - 큐 데이터 구조를 통해 수행한다. 선입선출(FIFO) 방식 선입선출 순서로 노드를 저장하려면 추가 메모리가 필요
+-  DFS는 재귀 스택을 사용하므로 더 적은 메모리가 필요한 반면, BFS는 큐를 사용하므로 더 많은 메모리가 필요할 수 있다
+- 
+``` python
+# 백준 1260번
+def dfs(V):
+    visited[V] = 1  # 현재 노드를 방문했다고 표시
+    print(V, end=' ')  # 현재 노드 출력
+    for i in range(1, vertex + 1):
+        # 현재 노드와 연결되어 있고, 방문하지 않은 인접 노드를 찾음
+        if graph[V][i] == 1 and visited[i] == 0:
+            dfs(i)  # 찾은 노드에 대해 재귀적으로 DFS 수행
+
+def bfs(V):
+    visited2[V] = 1  # 시작 노드를 방문했다고 표시
+    queue = [V]  # 시작 노드를 큐에 넣음
+    while queue:
+        V = queue.pop(0)  # 큐의 맨 앞에서 노드를 꺼내옴
+        print(V, end=' ')  # 현재 노드 출력
+        for i in range(1, vertex + 1):
+            # 현재 노드와 연결되어 있고, 방문하지 않은 인접 노드를 찾음
+            if graph[V][i] == 1 and visited2[i] == 0:
+                queue.append(i)  # 찾은 노드를 큐에 넣음
+                visited2[i] = 1  # 방문했다고 표시
+
+
+# 입력 받기
+vertex, edge, start = map(int, input().split(' '))
+visited = [0] * (vertex + 1)  # DFS를 위한 방문 배열
+visited2 = [0] * (vertex + 1)  # BFS를 위한 방문 배열
+
+graph = [[0] * (1 + vertex) for _ in range(1 + vertex)]  # 그래프 표현을 위한 2차원 배열 초기화
+
+# 간선 정보 입력
+for i in range(edge):
+    a, b = map(int, input().split(' '))
+    graph[a][b] = graph[b][a] = 1  # 무방향 그래프이므로 양쪽 방향에 간선 표시
+
+# DFS와 BFS 호출
+dfs(start)
+print()
+bfs(start)
+
+```
+
+### DFS와 백트래킹의 차이점
+- DFS와 백트래킹은 둘다 재귀를 통해 구현하고 돌아가는 개념이 들어가있지만 DFS는 하나의 길을 끝까지 탐색한 후에 돌아오고 백트래킹은 가는 길에 답이 없다고 판단되면 돌아온다
+- DFS는 그래프나 트리를 탐색하는 특정 알고리즘인 반면 백트래킹은 가능성을 탐색하고 솔루션을 찾는데 사용되는 알고리즘이다.
+    - DFS는 주로 그래프나 트리 순회에 사용되어 도달가능한 모든 노드를 탐색할때 사용된다.
+    - 백트래킹은 계산문제, 특히 제약 조건 만족문제에 대한 솔루션을 찾는데 사용된다.
+    
+
 
 ### str.isdigit()
 - 문자가 하나라도 있다면 False, 숫자로만 이루어져 있으면 True를 반환하는 함수
 
 
+### 나누기 연산자를 사용하지 않고 나눗셈 수행하기
+- 일반적인 방법은 반복문을 통해 피제수(dividend)가 제수(divisor)보다 작아질 때까지 배당금에서 제수를 빼는 것이다.
+``` python
+def custom_division(dividend, divisor):
+    if divisor == 0:    # 피제수가 0일때 에러
+        raise ValueError("Cannot divide by zero")
+
+    result = 0
+    while dividend >= divisor:
+        dividend -= divisor
+        result += 1
+
+```
+- 비트 시프트 연산자를 사용하는 방법도 있다
+``` python
+res = 0
+# 비트 시프트 연산자를 사용한 나눗셈을 위한 주 루프
+while dividend >= divisor:
+    t, i = divisor, 1
+    
+    # 제수보다 작거나 같은 가장 큰 배수를 찾기 위한 내부 루프
+    while dividend >= t:
+        dividend -= t
+        res += i
+        i <<= 1  # 왼쪽 시프트 연산자를 사용하여 i를 2배로 증가시킴
+        t <<= 1  # 왼쪽 시프트 연산자를 사용하여 t를 2배로 증가시킴
+```
+- 첫번째 방법은 코드가 간단하고 이해하기 쉽지만 단순한 반복된 덧셈을 사용하기 때문에 비트 연산자보다 속도가 느리다.
 
 
+### 이진탐색 알고리즘 
+- 시간 복잡도 O(log n)
+- 정렬된 배열 내에서 대상의 값을 찾는 검색 알고리즘
+- 목표값을 배열의 중간요소와 비교하고 이 비교를 기반으로 검색공간의 절반을 제거해나가며 목표값을 찾거나 검색공간이 비어 있을 때까지 반복한다.
+``` py
+def binary_search(arr, target):
+    low, high = 0, len(arr) - 1     # 초기 시작과 끝값을 설정
+
+    while low <= high:              
+        mid = (low + high) // 2     # 중앙 값 설정
+
+        if arr[mid] == target:      # 타겟이 중앙값이랑 같으면 반환
+            return mid  
+        elif arr[mid] < target:     # 타겟이 중앙값보다 크다면 시작값을 중앙값+1 로 변경하고 반복
+            low = mid + 1  
+        else:
+            high = mid - 1           # 타겟이 중앙값보다 작다면 끝값을 중앙값-1 로 변경하고 반복
+
+    return -1  
+```
 
 
 

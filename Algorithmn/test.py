@@ -1,50 +1,36 @@
 class Solution:
-    def fourSum(self, nums: list[int], target: int) -> list[list[int]]:
-        nums.sort()
-        results = []
-        self.helper(nums, target, 4, [], results)
-        return results
-    
-    def helper(self, nums, target, N, res, results):    
-        # 4개의 합을 구하기 위한 2개의 정수를 미리 뽑아놓고 나머지 2개는 twosum함수를 통해 뽑아낸다
-        if len(nums) < N or N < 2: #1
-            return
-        if N == 2: #2
-            output_2sum = self.twoSum(nums, target)
-            if output_2sum != []:
-                for idx in output_2sum:
-                    results.append(res + idx)
-        
-        else: 
-            for i in range(len(nums) -N +1): #3
-                if nums[i]*N > target or nums[-1]*N < target: #4
-                    break
-                if i == 0 or i > 0 and nums[i-1] != nums[i]: #5
-                    self.helper(nums[i+1:], target-nums[i], N-1, res + [nums[i]], results)
-    
-    
-    def twoSum(self, nums: list[int], target: int) -> list[int]:
-        res = []
-        left = 0
-        right = len(nums) - 1 
-        while left < right: 
-            temp_sum = nums[left] + nums[right] 
+    def searchRange(self, nums: list[int], target: int) -> list[int]:
+        # 이진 탐색
 
-            if temp_sum == target:
-                res.append([nums[left], nums[right]])
-                right -= 1
-                left += 1
-                while left < right and nums[left] == nums[left - 1]:
-                    left += 1
-                while right > left and nums[right] == nums[right + 1]:
-                    right -= 1
-                                
-            elif temp_sum < target: 
-                left +=1 
-            else: 
-                right -= 1
-                                        
-        return res
-           
+        def searchStart(nums,target):
+            start,end=0,len(nums)-1
+
+            while start<=end:
+                mid=(start+end)//2  # 정수 오버플로우 방지를 위해 (start+end)//2 대신 start + (end - start) // 2 사용 가능
+                if nums[mid]<target:
+                    start=mid+1
+                else:
+                    end=mid-1
+            return start
+        
+        def searchEnd(nums,target):
+            start,end=0,len(nums)-1
+
+            while start<=end:
+                mid=(start+end)//2  # 정수 오버플로우 방지를 위해 (start+end)//2 대신 start + (end - start) // 2 사용 가능
+                if nums[mid]<=target:
+                    start=mid+1
+                else:
+                    end=mid-1
+            return end
+        
+        start= searchStart(nums,target)
+        end =searchEnd(nums,target)
+        return [start,end]
+            
+            
+                
+        
+                
 sol=Solution()
-print(sol.fourSum([1,0,-1,0,-2,2],0))
+print(sol.searchRange([5,7,7,7,8,10],8))
