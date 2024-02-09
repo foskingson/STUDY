@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>반응형 디자인 예제</title>
+<style>
+  /* 기본 스타일 */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 그리드 스타일 */
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 최소 250픽셀, 최대 1fr */
+    grid-gap: 20px;
+    padding: 20px;
+  }
+
+  /* 반응형 박스 스타일 */
+  .box {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 미디어 쿼리: 600px 이상의 화면 크기에 대한 스타일 */
+  @media screen and (min-width: 600px) {
+    .container {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 최소 200픽셀, 최대 1fr */
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- 그리드 컨테이너 -->
+<div class="container">
+  <!-- 그리드 아이템 -->
+  <div class="box">박스 1</div>
+  <div class="box">박스 2</div>
+  <div class="box">박스 3</div>
+  <div class="box">박스 4</div>
+</div>
+
+</body>
+</html>
