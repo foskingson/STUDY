@@ -32,7 +32,7 @@ public class MemberService {
     }
 
     private void validateDuplicateMember(Member member) {
-        memberRepository.findByName(member.getName()) //ctrl+쉬프트+r을 통해 리턴값 자동완성 Optional<Member> result / 리펙토링 기능도 있음
+        memberRepository.findByName(member.getName()) //ctrl+쉬프트+r을 통해 리턴값 자동완성 / 리펙토링 기능도 있음
             .ifPresent(m->{
                 throw new IllegalStateException("이미 존재하는 회원입니다.");
         });
