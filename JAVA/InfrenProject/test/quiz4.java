@@ -2,7 +2,7 @@ package InfrenProject.test;
 
 import java.util.Scanner;
 
-public class quiz4 {
+public class Quiz4 {
     public static void main(String[] args) {
         Scanner scanner=new Scanner(System.in);
         System.out.println("입력하세요 : 일반차량: 1 / 경차 혹은 장애인차량: 2 ");

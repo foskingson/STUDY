@@ -38,6 +38,7 @@ public class _16_Reference {
         System.out.println(c1.name);
         System.out.println(c2.name);
         c2 = c1;
+        
         System.out.println(c1.name);
         System.out.println(c2.name);
         c2.name = "고장난 카메라";

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import Basic.math;
 
-public class quiz2 {
+public class Quiz2 {
     public static void main(String[] args) {
         Scanner scanner=new Scanner(System.in);
         System.out.print("어린이 키: ");
