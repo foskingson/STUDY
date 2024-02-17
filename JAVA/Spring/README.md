@@ -6,7 +6,7 @@
 <br>
 
 ## 특징
-- 스프링의 특징을 처음 접할때 이론적으로 접하면 이해하기가 어렵다. hello-spring의 회원관리코드를 보면서 접하면 이해하기가 좀 더 편하다.
+- 스프링의 특징을 처음 접할때 이론적으로 접하면 이해하기가 어렵다. order폴더안의 각 예제에 맞는 테스트코드를 보면서 접하면 이해하기가 좀 더 편하다.
 1. 제어반전(IOC),의존성주입(DI) : AppConfig(설정파일)의 등장으로 구현체는 자신의 기능을 수행하는 역할만 담당하고 프로그램의 제어흐름은 AppConfig가 가져간다. IOC에서는 개발자가 아닌 스프링이 스스로 필요한 구현체를 관리한다. 구현체 내에서 인스턴스를 생성해서 메서드를 사용하는 것이 아닌 생성자를 통해 외부로 부터 받아와 메서드를 사용해 의존성을 주입해주는 걸 DI라고 한다.
     - 실행 시점(런타임)에 외부에서 실제 구현 객체를 생성하고 클라이언트에 전달해서 클라이언트와 서버의 실제 의존관계가 연결 되는 것을 의존관계 주입이라고 한다.
     - AppConfig 처럼 객체를 생성하고 관리하면서 의존관계를 연결해 주는 것을 IOC컨테이너 혹은 DI컨테이너라고 한다.
@@ -540,6 +540,198 @@ Polices: [order.core.discount.FixDiscountPolicy@478ee483, order.core.discount.Ra
 - 수동 빈 등록을 사용하는 경우
     - 기술 지원 빈 : 기술적인 문제나 공통 관심사를 처리할 때 주로 사용된다. 데이터베이스 연결이나 공통 로그 처리처럼 업무 로직을 지원하는 하부 기술이나 공통 기술들이다.
     - 애플리케이션에 광범위하게 영향을 미치는 기술 지원 객체는 수동 빈으로 등록해서 설정 정보에 바로 나타나게 해야 유지보수하기 편하다.
+
+<br>
+<br>
+
+## 빈 생명주기 
+- 스프링 빈의 이벤트 라이프사이클
+    - 스프링 컨테이너 생성 => 스프링 빈 생성 => 의존 관계 주입 => 초기화 콜백 => 사용 => 소멸전 콜백 => 스프링 종료
+    - 초기화 콜백은 빈이 생성되고 의존관계 주입이 완료된 후 호출
+    - 소멸전 콜백은 빈이 소멸되기 직전에 호출
+<br>
+
+- 스프링 빈은 객체를 생성하고 의존관계 주입이 다 끝나야 필요한 데이터를 사용할 수 있다.
+``` java
+public class NetworkClient {
+    private String url;
+
+    public NetworkClient() {
+        System.out.println("생성자 url= "+ url);
+        connect();
+        call("초기화");
+        disconnect();
+    }
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    public void connect(){
+        System.out.println("connet : "+url);
+    }
+
+    public void call(String message){
+        System.out.println("call: "+url+" message: "+ message);
+    }
+
+    public void disconnect(){
+        System.out.println("close: "+ url);
+    }
+}
+
+@Bean   // 빈의 초기화 콜백(메서드)
+public NetworkClient networkClient(){       
+        NetworkClient networkClient = new NetworkClient();  
+        networkClient.setUrl("http://hi");  // 빈 객체가 생성되고 초기화되기전에 호출되므로 데이터 사용 안됨
+        return networkClient;
+}
+
+/*
+생성자 url= null    
+connet : null
+call: null message: 초기화
+close: null
+*/
+```
+<br>
+
+### 빈 생명주기 콜백
+1. 인터페이스 InitializingBean, DisposableBean : 차례대로 메서드로 초기화와 소멸을 지원한다. 
+    - 스프링 전용 인터페이스로 해당 코드 자체가 스프링에 의존한다.
+    - 메서드 이름이 고정이다.
+    - 내가 코드를 고칠 수 없는 외부 라이브러리에 적용할 수 없다
+    - 지금은 다음의 더 나은 방법들이 있어서 거의 사용하지 않는다.
+``` java
+public class NetworkClient implements InitializingBean, DisposableBean  {
+    private String url;
+
+    public NetworkClient() {
+        System.out.println("생성자 url= "+ url);
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void connect(){
+        System.out.println("connet : "+url);
+    }
+
+    public void call(String message){
+        System.out.println("call: "+url+" message: "+ message);
+    }
+
+    public void disconnect(){
+        System.out.println("close: "+ url);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        connect();
+        call("초기화");
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        disconnect();
+    }
+}
+
+/* 바꾸고 위의 테스트 코드 출력시
+생성자 url= null
+connet : http://hi
+call: http://hi message: 초기화
+close: http://hi
+
+*/
+```
+<br>
+
+2. 빈 등록 초기화, 소멸 메서드 지정 : 설정 정보에 `@Bean(initMethod = "init", destroyMethod = "close")` 처럼 초기화, 소멸 메서드를 지정할 수 있다.
+    - 아래 코드처럼 초기화,소멸 메서드를 만들어 놓고 지정할 수 있다.
+    - 스프링 빈이 스프링 코드에 의존하지 않는다.
+    - 메서드 이름을 자유롭게 줄 수 있다.
+    - 코드가 아니라 설정정보를 사용해 코드를 못 고치는 외부라이브러리에서도 초기화,소멸 메서드를 적용할 수 있다.
+    - @Bean의 destroyMethod 는 기본값이 (inferred) (추론)으로 등록되어 있어 따로 적어주지 않아도 추론 기능은 close , shutdown 라는 이름의 메서드를 자동으로 호출해준다. 
+``` java
+public void init() {
+        connect();
+        call("초기화");
+    }
+
+
+public void close() {
+    disconnect();
+}
+```
+<br>
+
+3. 애노테이션 @PostConstruct, @PreDestroy : 간단하게 애노테이션을 붙여주어 초기화,소멸 메서드를 지정할 수 있다.
+    - 최근 스프링에서 가장 권장하는 방법이다.
+    - 유일한 단점으로 외부 라이브러리에 적용하지 못하기 때문에 그런 경우 2번째 방법을 사용한다.
+
+<br>
+<br>
+
+## 빈 스코프
+- 빈 스코프는 말 그대로 빈이 존재할 수 있는 범위를 말한다.
+<br>
+
+### 스프링의 스코프 종류
+1. 싱글톤(default) : 기본 스코프로 스프링 컨테이너의 시작과 종료까지 유지되는 가장 넓은 범위의 스코프다.
+2. 프로토타입 : 스프링 컨테이너는 프로토타입 빈의 생성과 의존관계 주입까지만 관여하고 더는 관리하지 않는 짧은 범위의 스코프다. `@Scope("prototype")` 을 통해 지정 가능하다.
+3. 웹 관련 스코프 (웹 환경에서만 동작)
+    - request : 웹이 요청이 들어오고 나갈때까지 유지되는 스코프다. 각 요청마다 별도의 빈 인스턴스가 생성되고 관리된다.
+        - A전용 요청과 B전용 요청이 있으면 따로 생성되어 관리된다.
+        - 프록시 객체나 Provider를 이용해서 객체를 필요한 시점까지 지연처리 할 수 있다.
+    - session : 웹 세션이 생성되고 종료될 때까지 유지되는 스코프다.
+    - application : 웹의 서블릿 컨텍스('ServletContext')와 같은 범위로 유지되는 스코프다.
+<br>
+
+### 프로토타입 스코프
+- 프로토타입 스코프를 스프링 컨테이너에서 조회하면 스프링 컨테이너는 항상 새로운 인스턴스를 생성해 반환한다. 의존성 주입, 초기화까지 끝나면 스프링 컨테이너에서 관리하지 않는다.
+    - 싱글톤은 A,B,C라는 인스턴스를 만들어도 모두 데이터와 메서드를 공유하지만 프로토타입은 A,B,C가 라는 인스턴스를 만들면 각자의 데이터 공간을 따로 사용한다.
+- 싱글톤 빈은 스프링 컨테이너 생성 시점에 초기화 메서드가 실행 되지만, 프로토타입 스코프의 빈은 스프링 컨테이너에서 빈을 조회할 때 생성되고, 초기화 메서드도 실행된다
+- 실무에서 프로토타입 빈을 사용하는 경우는 거의 드물다.
+
+<br>
+
+### 싱글톤과 프로토타입을 같이 쓰면 생기는 문제점
+- 문제는 싱글톤과 프로토타입을 함께 사용할때 생긴다.
+    - 싱글톤 빈에서 프로토타입 빈을 주입받아서 사용하면 주입은 스프링컨테이너가 생성되고 나서 끝나고 주입받은 객체를 싱글톤으로 사용되기 때문에 결과적으로 싱글톤을 쓰는 거랑 다름없는 현상이 일어난다. 이러면 싱글톤을 쓰지 이런 상활을 원한것이 아닐 것이다.
+<br>
+
+### 해결방법
+1. ObjectProvider
+    - 아래 코드와 같이 ObjectProvider을 지정하면 getObject를 지정한 빈을 컨테이너에서 대신 찾아주는 서비스(DL : 의존관계 조회)를 제공한다.
+    - ObjectProvider의 getObject() 메서드를 호출하는 시점에 스프링 컨테이너에서 빈을 생성하고 주입한다. 빈의 생성을 지연시켜 원하는 시점에 getObject()를 배치하면 된다.
+    - 필요할때마다 조회해서 프로토타입의 역할을 수행할 수 있다.
+``` java
+private ObjectProvider<PrototypeBean> prototypeBeanProvider;
+
+/*
+생성자 및 그 외 코드들
+*/
+
+PrototypeBean prototypeBean = prototypeBeanProvider.getObject();    
+```
+
+<br>
+
+2. JSR-330 Provider
+    - 이 방법을 사용하려면 스프링부트버전에 맞는 관련 라이브러리를 gradle에 추가해야 한다. `jakarta.inject:jakarta.inject-api:2.0.1` 스프링부트 3.0 이상
+    - 첫번째 방법과 사용법은 비슷하다.
+    - 자바 표준이므로 다른 코드에서도 사용 가능하다.
+``` java
+private Provider<PrototypeBean> provider;
+
+/*
+생성자 및 그 외 코드들
+*/
+
+PrototypeBean prototypeBean = provider.get();    
+```
+
+
 
 <br>
 <br>
