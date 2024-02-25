@@ -238,11 +238,33 @@
 |            |                                                             | Hello hack                |              |
 | s          | 단일 행(dotall)                                               | /Hello.+hack/g → Hello dream | Hello hack |
 |            |                                                             | /Hello.+hack/s → Hello dream | Hello dream<br/>Hello hack |
+<br>
+
+### Python 정규 표현식
+> Python에서는 re 모듈을 통해 정규 표현식을 사용할 수 있다. re 모듈의 함수를 호출하여 패턴에 일치하는 문자열을 검색하거나 치환하는 등 다양한 동작을 수행한다.
+
+<br>
+
+### JavaScript 정규 표현식
+> JavaScript에서는 2가지 방법으로 정규 표현식을 사용할 수 있다.
+1. 첫 번째 방법은 정규 표현식 리터럴을 사용하는 것이다. /패턴/ 혹은 /패턴/플래그의 형태로 작성한다.
+2. 두 번째 방법은 RegExp 객체를 생성하는 것이다. new RegExp(정규 표현식 리터럴, '플래그') 혹은 new RegExp('패턴', '플래그')로 객체를 생성한다.
+<br>
+
+### 정규 표현식 연습 도구
+- https://regexr.com/ : 정규 표현식을 작성하고 문자열이 패턴에 매치하는지 확인할 수 있다. 패턴에 대한 해석도 제공한다.
+- https://regexper.com/ : 정규 표현식 시각화 도구로, 작성한 패턴을 시각화하여 알기 쉽게 보여준다.
+- https://tools.dreamhack.games/cyberchef : 정규 표현식을 작성하고 문자열이 패턴에 매치한다.
+
+<br>
 
 
+
 <br>
 <br>
 <br>
+
+
 
 
 ##### 드림핵 공부 내용
