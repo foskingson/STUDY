@@ -6,9 +6,13 @@
 
 <br>
 <br>
+<br>
 
 ## 객체 지향 프로그래밍
-- 객체 지향 프로그래밍은 프로그램을 여러개의 독립된 단위인 객체들의 모임으로 파악하고자 하는 것이다. 각각의 객체는 메시지를 주고받고 데이터를 처리할 수 있다.
+> 객체 지향 프로그래밍은 프로그램을 여러개의 독립된 단위인 객체들의 모임으로 파악하고자 하는 것이다. 각각의 객체는 메시지를 주고받고 데이터를 처리할 수 있다.
+
+<br>
+
 ### 특징 
 1. 다형성(*중요*) : 다형성은 역할(인터페이스)과 구현(특정 기능을 제공하는 구체적인 클래스, 구현체)으로 나눈다. 역할과 구현으로 구분하여 프로그램의 변경이 유연하고 용이해진다.
     - 예를 들면 운전자는 차의 종류가 바뀌어도 자동차들이 자동차의 역할만 공통되고 운전자는 운전자의 역할만 알고 있으면 운전이 가능하다. 차가 바뀌어도 운전자에게 영향을 주지 않는다.
@@ -498,6 +502,439 @@ class Dog extends Animal {
 
 <br>
 <br>
+<br>
+
+## 제네릭스
+> 제네릭스는 지정되지 않은 데이터 유형으로 작동하는 클래스, 인터페이스 및 메서드를 생성할 수 있게 합니다. 제네릭은 코드를 더 유연하고 재사용 가능하게 만들어 준다.
+
+<br>
+
+- 사용법 : 자바에서 제네릭은 꺾쇠 괄호 (<>)와 유형 매개변수를 사용하여 선언된다.
+``` java
+class 클래스이름<T> {
+    // 클래스 본문
+}
+
+interface 인터페이스이름<T> {
+    // 인터페이스 본문
+}
+
+class 클래스이름<T1, T2, ..., Tn> {
+    // 클래스 본문
+}
+
+public <T> void 메서드이름(T 매개변수) {
+    // 메서드 본문
+}
+```
+
+    T는 유형 매개변수로, 지정되지 않은 데이터 유형을 나타낸다.
+    <T>는 제네릭 유형 매개변수의 선언이다.
+    T1, T2, ..., Tn은 여러 유형 매개변수다.
+
+<br>
+
+- 제네릭스 예시 코드
+```  java
+public class GenericsExample {
+    public static void main(String[] args) {
+        // 제네릭스
+        Integer[] intArray = {1, 2, 3, 4, 5};
+        Double[] doubleArray = {1.0, 2.0, 3.0, 4.0, 5.0};
+        String[] stringArray = {"A", "B", "C", "D", "E"};
+
+        printAnyArray(intArray);
+        printAnyArray(doubleArray);
+        printAnyArray(stringArray);
+    }
+
+    // T : Type, K : Key, V : Value, E : Element 
+    // 키와 값 쌍 만 맞추면 <> 안에 다른 키값을 넣어도 사용 가능하다.
+    private static <T> void printAnyArray(T[] array) {
+        // <T>를 붙여 제네릭 메서드를 만든다.
+        for (T t : array) {
+            System.out.print(t + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+<br>
+<br>
+<br>
+
+## 컬렉션 프레임 워크 
+> 자바의 컬렉션 프레임워크(Collection Framework)는 데이터를 저장, 관리 및 처리하는 데 사용되는 클래스와 인터페이스의 집합이다. 인터페이스와 구현 클래스로 구성되어 터페이스는 컬렉션의 공통 동작을 정의하고, 구현 클래스는 이러한 인터페이스를 구현하여 실제 데이터 구조를 제공한다.
+
+- 주요 컬렉션 인터페이스에는 List, Set, Map 등이 있다.
+- List 인터페이스는 순서가 있는 요소의 집합을 나타낸다. 데이터를 순차적으로 저장하고 중복을 허용한다.
+    - List 인터페이스를 구현하는 구현 클래스로는 ArrayList, LinkedList 등이 있다.
+- Set 인터페이스는 중복 요소를 허용하지 않는 요소의 집합을 나타낸다. 순서가 없을 수 있다.
+    - Set 인터페이스의 구현체로는 HashSet 등이 있다.
+- Map 인터페이스는 키-값 쌍의 집합을 나타낸다. 키는 중복될 수 없으며, 각 키는 하나의 값과 매핑된다.
+    - Map 인터페이스의 구현체로는 HashMap 등이 있다.
+
+<br>
+
+### 배열리스트 ArrayList
+> 자바의 배열리스트는 크기가 가변적인 배열을 구현한 클래스이다. 배열과 유사하지만 크기가 동적으로 조정될 수 있어 요소를 추가하거나 제거할 때 편리하게 사용할 수 있다.
+``` java
+// ArrayList 생성
+ArrayList<String> arrayList = new ArrayList<>();
+
+// 요소 추가
+arrayList.add("사과");
+arrayList.add("바나나");
+arrayList.add("딸기");
+
+// 요소 출력
+System.out.println("ArrayList의 요소:");
+for (String fruit : arrayList) {
+    System.out.println(fruit);
+}
+
+// 특정 인덱스에 요소 추가
+arrayList.add(1, "포도");
+
+// 요소 수정
+arrayList.set(2, "수박");
+
+// 요소 제거
+arrayList.remove("바나나");
+
+// 요소 인덱스 검색
+int index = arrayList.indexOf("사과");
+System.out.println("사과의 인덱스: " + index);
+
+// 정렬
+Collections.sort(arrayList);
+```
+
+    add() 메서드를 사용하여 요소를 추가한다.
+    get() 메서드를 사용하여 특정 인덱스의 요소를 가져온다.
+    set() 메서드를 사용하여 특정 인덱스의 요소를 수정한다.
+    remove() 메서드를 사용하여 요소를 제거한다.
+    indexOf() 메서드를 사용하여 요소의 인덱스를 검색한다.
+    size() 메서드를 사용하여 ArrayList의 크기를 얻는다.
+
+<br>
+
+### 연결리스트 LinkedList
+> 연결리스트는 데이터 요소들을 노드(Node)라는 단위로 저장하고, 각 노드는 데이터와 다음 노드를 가리키는 포인터(링크)로 이루어진 선형 데이터 구조이다. 각 노드는 데이터와 다음 노드에 대한 참조를 포함하고 있으며, 이 참조를 통해 다음 노드로 이동한다. 알고리즘에서도 자주 쓰이고 배열리스트와 비슷한 방식으로 사용할 수 있다.
+
+- 연결리스트 구조의 예시 :  5 -> 10 -> 15 -> 20 -> NULL
+    - 각각 다음 노드를 참조하고 있다.
+
+``` java
+// LinkedList 생성
+LinkedList<String> linkedList = new LinkedList<>();
+
+// 요소 추가
+linkedList.add("사과");
+linkedList.add("바나나");
+linkedList.add("딸기");
+
+// 요소 출력
+System.out.println("LinkedList의 요소:");
+for (String fruit : linkedList) {
+    System.out.println(fruit);
+}
+
+// 특정 인덱스에 요소 추가
+linkedList.add(1, "포도");
+
+// 요소 수정
+linkedList.set(2, "수박");
+
+// 요소 삭제
+linkedList.remove("바나나");
+
+// 요소 검색하여 인덱스 찾기
+int index = linkedList.indexOf("사과");
+System.out.println("사과의 인덱스: " + index);
+
+// 첫번째 요소에 추가(삭제도 removeFirst로 가능)
+linkedList.addFirst("멜론");
+
+// 마지막 요소에 추가(삭제도 removeLast로 가능)
+linkedList.addLast("토마토");
+
+// LinkedList의 요소 정렬
+Collections.sort(linkedList);
+```
+
+<br>
+
+### 해시셋 HashSet
+> 해시셋은 데이터를 저장하는 데 사용되는 자료구조 중 하나로 해시 함수를 사용하여 데이터를 저장하고 검색하는데 효율적이다. 
+
+- 해시의 특징
+    1. 고유한 해시 값: 서로 다른 입력에 대해서는 다른 해시 값을 반환한다.
+    2. 고정된 크기의 출력: 해시 함수는 항상 일정한 크기의 출력을 생성한다.
+    3. 출력에서 입력으로의 단방향 변환: 해시 함수는 단방향 함수이므로 해시 값으로부터 원래 입력을 복원하는 것은 일반적으로 불가능하다.
+    4. 속도와 효율성: 좋은 해시 함수는 빠르게 실행되며, 입력 공간의 모든 부분을 고르게 사용하여 해시 값을 생성한다.
+    5. 해시 테이블에서 사용: 해시 함수는 해시 테이블과 같은 자료구조에서 데이터를 저장하고 검색하는 데 사용된다. 해시 테이블은 해시 함수를 사용하여 데이터를 해시 값에 따라 저장하고, 이를 통해 빠르게 검색할 수 있다.
+
+<br>    
+
+
+``` java
+// 해시셋 생성
+HashSet<String> set = new HashSet<>();
+
+// 요소 추가
+set.add("Apple");
+set.add("Banana");
+set.add("Orange");
+set.add("Apple"); // 중복된 요소는 추가되지 않음
+
+// 요소 출력 (순서는 보장되지 않음)
+System.out.println("HashSet: " + set);
+
+// 요소 유무 확인
+System.out.println("Contains 'Banana': " + set.contains("Banana")); // true
+System.out.println("Contains 'Grape': " + set.contains("Grape")); // false
+
+// 요소 삭제
+set.remove("Orange");
+
+// 요소 출력
+System.out.println("HashSet after removal: " + set);
+```
+
+    HashSet은 제네릭을 사용하여 특정 타입의 요소를 저장합니다. 여기서는 문자열을 저장하는 예제이다.
+    HashSet은 중복된 요소를 허용하지 않는다. 따라서 "Apple"은 한 번만 추가되고, 나머지는 무시된다.
+    HashSet은 요소의 순서를 보장하지 않는다. 따라서 요소가 추가된 순서대로 출력되지 않는다.
+    contains() 메서드를 사용하여 특정 요소가 해시셋에 있는지 확인할 수 있다.
+    remove() 메서드를 사용하여 특정 요소를 삭제할 수 있다.
+
+<br>
+
+### 해시맵
+>자바에서 HashMap은 해시맵을 구현한 클래스 중 하나로, 키-값 쌍을 저장하는 자료구조이다. 각 키는 고유하며, 값은 키와 관련된 데이터를 저장한다.
+
+``` java
+// 해시맵 생성
+HashMap<String, Integer> map = new HashMap<>();
+
+// 키-값 쌍 추가
+map.put("Apple", 10);
+map.put("Banana", 20);
+map.put("Orange", 15);
+
+// 값 출력
+System.out.println("Value for key 'Apple': " + map.get("Apple")); // 10
+System.out.println("Value for key 'Grape': " + map.get("Grape")); // null
+
+// 키 존재 여부 확인
+System.out.println("Contains key 'Banana': " + map.containsKey("Banana")); // true
+System.out.println("Contains key 'Grape': " + map.containsKey("Grape")); // false
+
+// 값 변경
+map.put("Apple", 25);
+
+// 모든 키-값 쌍 출력
+System.out.println("HashMap: " + map);
+
+// 키 삭제
+map.remove("Orange");
+
+// 모든 키-값 쌍 출력
+System.out.println("HashMap after removal: " + map);
+```
+
+    HashMap은 제네릭을 사용하여 특정 타입의 키와 값 쌍을 저장한다. 여기서는 문자열을 키로, 정수를 값으로 저장하는 예제이다.
+    put() 메서드를 사용하여 특정 키와 값 쌍을 추가한다.
+    get() 메서드를 사용하여 특정 키에 해당하는 값을 가져온다. 키가 존재하지 않는 경우 null을 반환한다.
+    containsKey() 메서드를 사용하여 특정 키가 해시맵에 존재하는지 확인한다.
+    put() 메서드를 사용하여 이미 존재하는 키에 값을 할당하면, 해당 키에 연관된 이전 값은 새 값으로 대체된다.
+    remove() 메서드를 사용하여 특정 키와 그에 해당하는 값을 제거한다.
+
+
+<br>
+
+### 이터레이터 Iterator
+> 자바에서 이터레이터(Iterator)는 컬렉션(Collection) 객체를 순회하면서 요소에 접근할 수 있는 인터페이스이다. 이터레이터를 사용하면 컬렉션 내의 요소를 반복적으로 처리할 수 있다. 연결리스트와 유사한 구조를 가진다.
+
+- Map 데이터 구조는 `map.iterator()`로는 사용할 수 없고 `map.keySet().iterator()`와 같은 방식으로 키 값을 이터레이터로 지정해서 사용할 수 있다.
+
+``` java
+// ArrayList 생성
+ArrayList<String> list = new ArrayList<>();
+
+// ArrayList에 요소 추가
+list.add("사과");
+list.add("바나나");
+list.add("딸기");
+list.add("포도");
+
+// Iterator 생성
+Iterator<String> iterator = list.iterator();
+
+// Iterator를 사용하여 요소 순회
+while (iterator.hasNext()) { // 다음 요소가 있는지 확인
+    String fruit = iterator.next(); // 다음 요소 가져오기
+    System.out.println(fruit); // 요소 출력
+}
+
+iterator = list.iterator(); // 커서를 처음 위치로 초기화
+iterator.remove(); // 삭제 (현재 커서가 처음위치를 가르키므로 첫번째 요소 삭제)
+
+```
+
+    위 코드에서는 ArrayList를 생성하고 여러 과일을 추가한 후에 Iterator를 사용하여 순회하고 각 과일을 출력한다. hasNext() 메서드로 다음 요소의 존재 여부를 확인하고, next() 메서드로 다음 요소를 가져와서 출력한다. 이렇게 하면 ArrayList의 모든 요소를 순회하면서 접근할 수 있다.
+
+<br>
+<br>
+<br>
+
+
+
+## 익명 클래스
+> 익명 클래스(Anonymous Class)는 이름이 없는 클래스로, 주로 인터페이스나 추상 클래스의 인스턴스를 생성할 때 사용한다. 이 클래스는 정의와 동시에 인스턴스화되며 일반적으로 한 번만 사용되는 간단한 클래스의 경우에 유용하다. 
+
+``` java
+interface MyInterface {
+    void doSomething();
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 익명 클래스를 사용하여 MyInterface 인터페이스의 인스턴스 생성
+        MyInterface myInterface = new MyInterface() {
+            @Override // 기능을 확장하여 일회용으로 사용한다.
+            public void doSomething() {
+                System.out.println("익명 클래스의 메서드를 실행합니다.");
+            }
+        };
+
+        // 익명 클래스의 메서드 호출
+        myInterface.doSomething();
+    }
+}
+```
+
+<br>
+<br>
+<br>
+
+## 람다식
+> 람다식(lambda expression)은 자바 8부터 도입된 함수형 프로그래밍을 지원하기 위한 기능 중 하나로, 익명 함수를 간편하게 작성할 수 있도록 해준다. 람다식은 함수를 하나의 식(expression)으로 표현하는 방법이며, 주로 함수형 인터페이스(functional interface)를 구현할 때 사용된다. 람다식을 사용하여 비교 로직을 간단하게 표현하고, 이를 통해 코드의 가독성을 높이고 간결해진다.
+
+ - 람다식에서는 return 을 생략해도 알아서 값을 반환해준다.
+
+``` java
+List<Integer> numbers = new ArrayList<>();
+numbers.add(5);
+numbers.add(2);
+numbers.add(7);
+numbers.add(1);
+numbers.add(9);
+
+// 기존 방식: Comparator 인터페이스를 구현한 익명 클래스를 사용하여 정렬
+Collections.sort(numbers, new Comparator<Integer>() {
+    @Override
+    public int compare(Integer a, Integer b) {
+        return a.compareTo(b);
+    }
+});
+
+// 람다식을 사용한 방식: Comparator 인터페이스를 람다식으로 간단하게 표현
+Collections.sort(numbers, (a, b) -> a.compareTo(b));
+
+// 정렬된 리스트 출력
+for (Integer number : numbers) {
+    System.out.println(number);
+}
+```
+
+    1. Collections.sort(numbers, (a, b) -> a.compareTo(b)); 부분에서 Collections.sort() 메서드를 호출하여 리스트를 정렬한다. 이 때 람다식 (a, b) -> a.compareTo(b)을 사용하여 정렬 기준을 제공한다.
+
+    2. 람다식 (a, b) -> a.compareTo(b)은 Comparator 인터페이스의 compare() 메서드를 대체한다. 이 메서드는 두 개의 요소를 비교하여 정렬 순서를 결정하는 역할을 한다.
+
+    3. a.compareTo(b)는 a와 b를 비교하여 다음과 같은 결과를 반환한다.
+        - 만약 a가 b보다 작으면 음수를 반환
+        - 만약 a가 b와 같으면 0을 반환
+        - 만약 a가 b보다 크면 양수를 반환
+    
+    4. 이렇게 반환된 결과에 따라 Collections.sort() 메서드는 리스트의 요소들을 정렬한다. 람다식에서 반환되는 값이 음수면 a가 b보다 작으므로 a가 앞으로 오게 되고, 0이면 그대로 유지되고, 양수면 a가 b보다 크므로 b가 앞으로 오게 된다.
+
+    5. 따라서 이 람다식은 리스트를 기본적인 오름차순으로 정렬한다. 만약 내림차순으로 정렬하려면 (a, b) -> b.compareTo(a)와 같이 람다식을 변경할 수 있다.
+
+<br>
+<br>
+<br>
+
+## 함수형 인터페이스
+> 단 하나의 추상 메서드만을 갖는 인터페이스를 말한다. Java 8부터 도입된 함수형 프로그래밍을 지원하기 위한 개념으로, 람다식과 함께 사용된다.
+
+``` java
+@FunctionalInterface    //함수형 인터페이스임을 명시
+interface Adder {
+    int add(int a, int b);
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 람다식으로 Adder 인터페이스의 구현체를 생성
+        Adder adder = (a, b) -> a + b;
+        int result = adder.add(3, 5);
+        System.out.println("결과: " + result);
+    }
+}
+```
+
+<br>
+<br>
+<br>
+
+## 스트림
+> 컬렉션(Collection)이나 배열 등의 데이터 요소들을 함수형 프로그래밍의 스타일로 처리할 수 있는 기능을 제공한다. 스트림을 사용하면 데이터 처리 파이프라인을 통해 데이터를 변환하고 조작할 수 있다. 스트림을 사용하면 데이터 처리 과정을 파이프라인으로 표현할 수 있어서 코드의 가독성을 높이고, 함수형 프로그래밍 스타일로 작성할 수 있다. 또한 병렬 처리를 통해 성능을 향상시킬 수 있는 장점도 있다.
+
+``` java
+// 정수 리스트 생성
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+// 스트림을 사용하여 짝수를 필터링하고 출력
+List<Integer> evenNumbers = numbers.stream()
+                                    .filter(num -> num % 2 == 0)
+                                    .collect(Collectors.toList());
+
+// 결과 출력
+System.out.println("짝수: " + evenNumbers);
+```
+
+    위의 코드에서는 먼저 Arrays.asList() 메서드를 사용하여 정수 리스트를 생성한다. 그 다음에 stream() 메서드를 호출하여 리스트를 스트림으로 변환한다. 이후에 filter() 메서드를 사용하여 짝수를 필터링하고, collect() 메서드를 사용하여 필터링된 요소들을 리스트로 수집한다.
+
+<br>
+
+### 스트림의 연산
+    1. 중간연산
+        ```
+        filter(Predicate): 주어진 조건을 만족하는 요소만을 필터링합니다.
+        map(Function): 각 요소를 주어진 함수에 따라 매핑합니다.
+        sorted(): 요소들을 정렬합니다.
+        distinct(): 중복된 요소를 제거합니다.
+        limit(long): 스트림의 요소 개수를 제한합니다.
+        skip(long): 처음 몇 개의 요소를 건너뜁니다.
+        등등...
+        ```
+    2. 최종연산
+        ```
+        forEach(Consumer): 각 요소에 대해 주어진 동작을 수행합니다.
+        collect(Collector): 요소들을 수집하여 다른 자료구조로 변환합니다.
+        reduce(BinaryOperator): 요소들을 반복적으로 결합하여 단일 결과값을 생성합니다.
+        count(): 스트림의 요소 개수를 반환합니다.
+        anyMatch(Predicate): 주어진 조건을 만족하는 요소가 하나라도 있는지 검사합니다.
+        allMatch(Predicate): 모든 요소가 주어진 조건을 만족하는지 검사합니다.
+        등등...
+        ```
+
+<br>
+<br>
+<br>
+
 
 
 ## 기타

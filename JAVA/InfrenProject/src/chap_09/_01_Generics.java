@@ -18,7 +18,7 @@ public class _01_Generics {
         printAnyArray(sArray);
     }
 
-    // T : Type, K : Key, V : Value, E : Element <>
+    // T : Type, K : Key, V : Value, E : Element <> 
     private static <T> void printAnyArray(T[] array) {
         for (T t : array) {
             System.out.print(t + " ");

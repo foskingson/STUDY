@@ -6,14 +6,13 @@ import chap_08.reporter.Reportable;
 public class SpeedCam extends Camera {
     private Detectable detector;
     private Reportable reporter;
+    
 
-    public void setDetector(Detectable detector) {
+    public SpeedCam(Detectable detector, Reportable reporter) {
         this.detector = detector;
-    }
-
-    public void setReporter(Reportable reporter) {
         this.reporter = reporter;
     }
+
 
     @Override
     public void showMainFeature() {
