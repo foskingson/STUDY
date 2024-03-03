@@ -1,62 +1,31 @@
-class Solution:
-    def isValidSudoku(self, board: list[list[str]]) -> bool:
-        res = []
-        for i in range(9):
-            for j in range(9):
-                element = board[i][j]
-                if element != '.':
-                    res += [(i, element), (element, j), (i // 3, j // 3, element)]
-        return len(res) == len(set(res))    # set을 통해 중복을 없앤 것과 길이가 같으면 True 아니면 False
+# 횡성과 경기도에 관한 퀴즈 질문과 답변
+questions = [
+    "횡성의 유명한 요새의 이름은 무엇입니까?\n(a) 화성 요새\n(b) 경복궁\n(c) 창덕궁\n",
+    "횡성 요새는 언제 건설되었습니까?\n(a) 1392년\n(b) 1796년\n(c) 1910년\n",
+    "횡성 요새는 유네스코 세계 문화유산입니다. 참이거나 거짓입니까?\n(a) 참\n(b) 거짓\n",
+    "어떤 왕이 횡성 요새의 건설을 명령했습니까?\n(a) 세종대왕\n(b) 정조대왕\n(c) 태조대왕\n",
+    "한국어에서 '횡성'이란 단어의 의미는 무엇입니까?\n(a) 꽃의 도시\n(b) 빛나는 성\n(c) 평화로운 동네\n"
+]
 
+# 질문에 대한 대응하는 답변
+answers = ['a', 'b', 'a', 'b', 'b']
 
-        ''' 
-        for i in range(9):
-            for j in range(9):
-                if board[i][j] != ".":
-                    target = board[i][j]
-                    target_i, target_j = i, j
-                else:
-                    continue
+# 퀴즈를 관리하는 함수
+def administer_quiz(questions, answers):
+    score = 0
+    for i in range(len(questions)):
+        user_answer = input(questions[i]).lower().strip()
+        if user_answer == answers[i]:
+            print("정답!")
+            score += 1
+        else:
+            print("오답!")
+    print("퀴즈 완료! 총 점수는 {}/{}입니다.".format(score, len(questions)))
 
-                for k in range(9):  # 같은 행에 같은 숫자가 있는지 확인
-                    if target_j == k:
-                        continue
-                    else:
-                        if target == board[i][k]:
-                            print("j")
-                            return False
+# 메인 함수로 퀴즈 실행
+def main():
+    print("횡성과 경기도 퀴즈에 오신 것을 환영합니다!\n")
+    administer_quiz(questions, answers)
 
-                for l in range(9):  # 같은 열에 같은 숫자가 있는지 확인
-                    if target_i == l:
-                        continue
-                    else:
-                        if target == board[l][j]:
-                            return False
-
-                for n in range(9): # 3x3박스안에 같은 숫자 있는지 확인
-                    for m in range(9):
-                        if n == target_i and m == target_j:
-                            continue
-
-                        if n//3 == target_i//3 and m//3 == target_j//3:
-                            if target == board[n][m]:
-                                return False
-        return True
-        '''
-
-
-
-
-  
-sol = Solution()
-print(sol.isValidSudoku([["5","3",".",".","7",".",".",".","."]
-,["6",".",".","1","9","5",".",".","."]
-,[".","9","8",".",".",".",".","6","."]
-,["8",".",".",".","6",".",".",".","3"]
-,["4",".",".","8",".","3",".",".","1"]
-,["7",".",".",".","2",".",".",".","6"]
-,[".","6",".",".",".",".","2","8","."]
-,[".",".",".","4","1","9",".",".","5"]
-,[".",".",".",".","8",".",".","7","9"]]))
-    
-    
+if __name__ == "__main__":
+    main()

@@ -1,36 +1,21 @@
+from typing import List
+
+
 class Solution:
-    def searchRange(self, nums: list[int], target: int) -> list[int]:
-        # 이진 탐색
-
-        def searchStart(nums,target):
-            start,end=0,len(nums)-1
-
-            while start<=end:
-                mid=(start+end)//2  # 정수 오버플로우 방지를 위해 (start+end)//2 대신 start + (end - start) // 2 사용 가능
-                if nums[mid]<target:
-                    start=mid+1
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        
+        for i in range(len(grid)):
+            for k in range(len(grid[0])):
+                if i==0 and k==0:
+                    continue
+                if i==0:
+                    grid[i][k]=grid[i][k]+grid[i][k-1]
+                elif k==0:
+                    grid[i][k]=grid[i][k]+grid[i-1][k]
                 else:
-                    end=mid-1
-            return start
-        
-        def searchEnd(nums,target):
-            start,end=0,len(nums)-1
+                    grid[i][k]= min(grid[i][k]+grid[i][k-1],grid[i][k]+grid[i-1][k])
+        return grid[-1][-1]
+                
 
-            while start<=end:
-                mid=(start+end)//2  # 정수 오버플로우 방지를 위해 (start+end)//2 대신 start + (end - start) // 2 사용 가능
-                if nums[mid]<=target:
-                    start=mid+1
-                else:
-                    end=mid-1
-            return end
-        
-        start= searchStart(nums,target)
-        end =searchEnd(nums,target)
-        return [start,end]
-            
-            
-                
-        
-                
 sol=Solution()
-print(sol.searchRange([5,7,7,7,8,10],8))
+print(sol.minPathSum([[1,3,1],[1,5,1],[4,2,1]]))
