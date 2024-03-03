@@ -130,7 +130,8 @@ System.out.println(d); // 98.8
     2. `Scanner scanner = new Scanner(System.in);` 스캐너의 인스턴스를 생성한다. 생성자는 적절한 입력스트림을 전달한다. 여기서 System.in는 일반적으로 콘솔 입력용 키보드인 표준 입력 스트림이다.
         - 한글이 깨질 경우 `Scanner scanner = new Scanner(System.in, "MS949");` 혹은 `Scanner scanner = new Scanner(System.in, "UTF-8");` 을 사용한다.
     3. `String name = scanner.nextLine();` 입력을 받는다.
-        - nextLine(): 입력 라인을 문자열로 읽는다.
+        - next() : 다음 공백이나 개행 문자를 만날 때까지의 문자열을 읽는다. 한 단어만 읽기 때문에 스페이스바로 누르면 종료된다.
+        - nextLine(): 사용자가 입력한 문자열 한 줄 전체를 읽는다.
         - nextInt(): 다음 토큰을 정수로 읽는다.
         - nextDouble(): 다음 토큰을 double로 읽는다.
     4. `scanner.close();` 입력 작업을 완료하고 시스템 리소스를 확보하기위해 scanner개체를 닫는다. 
@@ -935,10 +936,422 @@ System.out.println("짝수: " + evenNumbers);
 <br>
 <br>
 
+## 예외처리
+> 예외처리는 프로그램 실행 중에 발생할 수 있는 오류를 처리하는 방법이다.
+```
+1. 컴파일 오류 : 컴파일 오류는 코드를 컴파일할 때 발생하는 오류이다. 주로 문법 오류나 타입 오류와 관련이 있다. 이러한 오류는 소스 코드를 실행하기 전에 발견되며, 컴파일러가 오류 메시지를 통해 발견된 문제를 알려준다.
 
+2. 런타임 오류 : 런타임 오류는 프로그램이 실행되는 동안 발생하는 오류이다. 이는 주로 프로그램이 실행 중에 예기치 않은 조건에 직면할 때 발생한다. 예를 들어, 0으로 나누기, 배열 범위를 벗어난 접근, null 포인터 참조 등이 있다. 이러한 오류는 컴파일러가 감지하지 못하는 경우가 많으며, 프로그램 실행 중에 발생한다. 이러한 오류는 프로그램 실행 중에 예외(Exception)로 발생하며, 이에 대한 적절한 예외 처리 로직이 필요하다.
+```
+
+<br>
+
+- try/catch : "try" 블록 내에서는 예외가 발생할 수 있는 코드를 작성하고, 예외가 발생하면 "catch" 블록에서 해당 예외를 처리한다.
+
+``` java
+try {
+    System.out.println(3/0);    // 사용자가 0으로 나누는 것을 시도한다면 ArithmeticException 이 발생
+} catch (ArithmeticException e) {
+    System.out.println("0으로 나눌 수 없습니다. 다른 숫자를 입력해주세요."); //  ArithmeticException이 발생하면 catch 블록 실행
+}
+```
+
+<br>
+
+- throw : 예외를 명시적으로 발생시킨다. 이를 통해 개발자는 예외 상황을 감지하고 처리할 수 있다. 예외를 명시적으로 발생시키는 키워드입니다. 이를 통해 개발자는 예외 상황을 감지하고 처리할 수 있다.
+
+``` java
+int age =17;
+
+try {
+    if (age<19){
+        throw new Exception("만 19세 미만에게는 판매하지 않습니다.");   // 에러를 발생시키면 아래의 catch 블록이 실행된다.
+    }else{
+        System.out.println("판매되었습니다.");
+    }
+} catch (Exception e) {
+    e.printStackTrace();
+}
+```
+
+<br>
+
+- finally : finally 블록은 예외 발생 여부와 상관없이 항상 실행되는 코드 블록이다. 예외 처리 또는 자원 관리와 관련된 작업을 수행할 때 유용하다.
+``` java
+try {
+    System.out.println("택시의 문을 연다.");
+    throw new Exception("휴무 택시");
+} catch (Exception e) {
+    System.out.println("!! 문제 발생 : " + e.getMessage());
+} finally {
+    System.out.println("택시의 문을 닫는다.");  // 예외가 발생해도 실행된다.
+}
+```
+
+<br>
+
+- AutoCloseable : AutoCloseable라는 인터페이스를 통해 구현체를 만들고 그에 관한 try문을 작성하면 자원을 열고 사용한 후에 자동으로 닫아주는 기능을 사용할 수 있다.
+``` java
+try (ResourceType resource = new ResourceType()) {
+    // 자원을 이용한 코드
+} catch (ExceptionType e) {
+    // 예외 처리 코드
+}
+
+public class MyResource implements AutoCloseable {
+    public MyResource() throws IOException {
+        // 자원을 열거나 초기화하는 코드
+        System.out.println("자원을 열었습니다.");
+    }
+
+    public void processResource() {
+        // 자원을 사용하는 코드
+        System.out.println("자원을 사용합니다.");
+    }
+
+    @Override
+    public void close() throws Exception {  // try문이 끝날때 자동으로 실행된다.
+        // 자원을 닫는 코드
+        System.out.println("자원을 닫습니다."); 
+    }
+}
+```
+
+<br>
+
+- 사용자 정의 예외 : 사용자 정의 예외란 자바에서 기본적으로 제공되는 예외 이외에 사용자가 필요에 따라 직접 만들어 사용하는 예외를 말한다.
+``` java
+class UnderAgeException extends Exception {
+    public UnderAgeException() {
+        super("19세 미만은 이 작업을 수행할 수 없습니다.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            int age = 17; // 사용자의 나이
+            if (age < 19) {
+                throw new UnderAgeException();
+            }
+            // 이하 작업 수행
+            System.out.println("작업을 수행합니다.");
+        } catch (UnderAgeException e) {
+            System.out.println("예외 발생: " + e.getMessage());
+        }
+    }
+}
+```
+
+<br>
+
+- throws : throws는 메서드에서 발생할 수 있는 예외를 해당 메서드를 호출하는 코드로 전달한다. 메서드 내에서 예외가 발생할 수 있음을 명시하는 역할을 한다.
+``` java
+public class Throws {
+    public static void main(String[] args) {
+        try {
+            writeFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("메인 메소드에서 해결할게요.");
+        }
+    }
+
+    public static void writeFile() throws IOException {     // IOException예외가 발생하면 메인의 catch블록이 실행된다.
+        FileWriter writer = new FileWriter("test.txt");
+        throw new IOException("파일 쓰기에 실패했어요!!");
+    }
+}
+```
+
+<br>
+<br>
+<br>
+
+## 쓰레드(Thread)
+>  프로세스는 실행 중인 프로그램을 말하고 쓰레드는 그 프로세스의 자원을 사용해 실제로 작업을 수행하는 것을 쓰레드라고 한다. 또한 자바에서는 멀티쓰레드라는 동시에 여러 작업을 수행할 수 있는 기능을 제공한다.
+
+<br>
+
+자바에서 쓰레드 생성하는 2가지 방법 
+
+1. Thread 클래스 상속받기
+``` java
+class MyThread extends Thread {
+    public void run() {
+        // 스레드가 실행할 코드 작성
+    }
+}
+
+MyThread myThread = new MyThread();
+myThread.start();   // 해당 클래스의 인스턴스를 생성하고 start() 메서드를 호출하여 쓰레드를 실행
+// myThread.run(); 을 할 경우 다른 쓰레드에서 동작하는게 아닌 현재 쓰레드에서 동작한다.
+```
+
+<br>
+
+2. Runnable 인터페이스의 구현체 만들기
+``` java
+class MyRunnable implements Runnable {
+    public void run() {
+        // 스레드가 실행할 코드 작성
+    }
+}
+
+Thread thread = new Thread(new MyRunnable());
+thread.start();
+```
+
+<br>
+<br>
+
+- join() : join 메서드는 한 스레드가 다른 스레드의 종료를 기다릴 때 사용된다. 주로 다른 스레드가 완료될 때까지 기다리고 그 이후에 작업을 계속 진행해야 할 때 유용하게 활용된다.
+``` java
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("MyThread 시작");
+        try {
+            Thread.sleep(2000); // 2초 동안 쓰레드 일시 정지
+        } catch (InterruptedException e) {
+            System.out.println("MyThread가 인터럽트 받음");
+        }
+        System.out.println("MyThread 종료");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread myThread = new MyThread();
+        myThread.start(); // 쓰레드 시작
+
+        try {
+            System.out.println("MyThread가 종료될 때까지 기다립니다.");
+            myThread.join(); // MyThread가 종료될 때까지 기다림
+            System.out.println("MyThread가 종료됨");
+        } catch (InterruptedException e) {
+            System.out.println("Main 스레드가 인터럽트 받음");
+        }
+    }
+}
+```
+
+<br>
+<br>
+
+- 동기화 : 동기화는 멀티스레드 환경에서 공유된 자원에 대한 접근을 조절하는 메커니즘이다. 여러 스레드가 동시에 공유된 자원에 접근하면서 데이터의 일관성을 유지하기 위해 사용된다. 
+    - 쉽게 말하면 한번에 하나의 스레드만이 동기화된 메서드를 접근할 수 있다.
+``` java
+class BankAccount {
+    private int balance;
+
+    public BankAccount(int balance) {
+        this.balance = balance;
+    }
+
+    public synchronized void deposit(int amount) {
+        balance += amount;
+    }
+
+    public synchronized void withdraw(int amount) {
+        if (balance >= amount) {
+            balance -= amount;
+        } else {
+            System.out.println("Insufficient balance!");
+        }
+    }
+
+    public synchronized int getBalance() {
+        return balance;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount(1000);
+
+        // 여러 스레드에서 계좌에 동시에 접근
+        Thread thread1 = new Thread(() -> {
+            account.deposit(500);
+        });
+
+        Thread thread2 = new Thread(() -> {
+            account.withdraw(200);
+        });
+
+        thread1.start();
+        thread2.start();
+
+        // 잔액 출력
+        System.out.println("Current balance: " + account.getBalance());
+    }
+}
+```
+
+<br>
+<br>
+<br>
+
+## 파일 
+> 자바에서 파일 다루기는 자바의 기본 라이브러리(java.io 패키지)를 사용하여 쉽게 할 수 있다.
+
+<br>
+
+- 파일 생성 
+``` java
+File file = new File("test.txt");
+try {
+    file.createNewFile();   // 파일 생성
+    if (file.exists()){
+        System.out.println("파일 이름 : " + file.getName());    
+        System.out.println("파일 절대 경로 : " + file.getAbsolutePath());
+        System.out.println("파일 크기 (byte) : " + file.length());
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+} 
+```
+
+<br>
+
+- 폴더 생성 
+``` java
+folder.mkdir();      // 폴더 생성
+if(folder.exists()){
+    System.out.println("폴더 이름 : "+folder.getName());
+    System.out.println("폴더 절대 경로 : "+folder.getAbsolutePath());
+}
+```
+
+
+<br>
+
+- 현재 경로내의 모든 파일 조회
+``` java
+String folder = ".";
+File filesAndFolders = new File(folder);
+System.out.println("현재 폴더 경로 : " + filesAndFolders.getAbsolutePath());
+for (File file : filesAndFolders.listFiles()) {
+    if (file.isFile()) {
+        System.out.println("(파일) " + file.getName());
+    } else if (file.isDirectory()) {
+        System.out.println("(폴더) " + file.getName());
+    }
+}
+```
+
+
+<br>
+
+- BufferedWriter는 대용량 파일을 처리할 때 효율적이고, Scanner 및 FileWriter는 간편하게 파일을 읽고 쓸 수 있다.
+- 파일 읽고 쓰기1 (BufferedReader, BufferedWriter를 사용한 방식)
+    
+``` java
+try {   // try(BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) 로 사용해서 끝날때 자동으로 파일을 닫을 수 있다.
+    // 파일 읽기
+    BufferedReader reader = new BufferedReader(new FileReader("input.txt"));
+    String line;
+    while ((line = reader.readLine()) != null) {
+        System.out.println(line); // 읽은 데이터를 출력
+    }
+    reader.close();
+
+    // 파일 쓰기
+    BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt",true));  // 2번째 인자로 true를 주면 append모드로 덮어쓰는게 아닌 뒤에 추가하는 방식이다.
+    writer.write("안녕하세요.\n");
+    writer.write("BufferedWriter를 사용한 파일 쓰기 예제입니다.\n");
+    writer.close();
+    System.out.println("파일에 쓰기 완료.");
+
+} catch (IOException e) {
+    System.out.println("파일을 읽거나 쓰는 도중 오류가 발생했습니다.");
+    e.printStackTrace();
+}
+```
+
+<br>
+
+- 파일 읽고 쓰기2 (Scanner와 FileWriter를 사용한 방식)
+``` java
+try {
+    // 파일 읽기
+    Scanner scanner = new Scanner(new File("input.txt"));
+    while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
+        System.out.println(line); // 읽은 데이터를 출력
+    }
+    scanner.close();
+
+    // 파일 쓰기
+    FileWriter writer = new FileWriter("output.txt");
+    writer.write("안녕하세요.\n");
+    writer.write("FileWriter를 사용한 파일 쓰기 예제입니다.\n");
+    writer.close();
+    System.out.println("파일에 쓰기 완료.");
+
+} catch (IOException e) {
+    System.out.println("파일을 읽거나 쓰는 도중 오류가 발생했습니다.");
+    e.printStackTrace();
+}
+```
+
+<br>
+
+- 파일 삭제
+``` java
+File file = new File("example.txt");
+
+if (file.delete()) {        // 반환 값으로 boolean을 주기 때문에 조건문으로 성공한지 확인할 수 있다.
+    System.out.println("파일 삭제 성공");
+} else {
+    System.out.println("파일 삭제 실패");
+}
+```
+
+<br>
+
+- 폴더 삭제
+``` java
+File folder = new File("A");
+if (folder.exists()) {      // 폴더가 존재한다면
+    if (folder.delete()) {
+        System.out.println("폴더 삭제 성공 : " + folder.getAbsolutePath());
+    } else {
+        System.out.println("폴더 삭제 실패 : " + folder.getAbsolutePath());
+    }
+}
+
+if (deleteFolder(folder)) {
+            System.out.println("*폴더 삭제 성공 : " + folder.getAbsolutePath());
+        } else {
+            System.out.println("*폴더 삭제 실패 : " + folder.getAbsolutePath());
+}
+
+public static boolean deleteFolder(File folder) {   
+    if (folder.isDirectory()) {     // 해당 파일이 폴더라면
+        for (File file : folder.listFiles()) {
+            deleteFolder(file);     // 하위 폴더 재귀 호출
+        }
+    }
+    System.out.println("삭제 대상 : " + folder.getAbsolutePath());
+    return folder.delete();
+    }
+
+// deleteFolder(A)
+//      deleteFolder(B)
+//          deleteFolder(C)
+//          C.delete() 삭제
+//      B.delete() 삭제
+// A.delete() 삭제
+```
+
+
+<br>
+<br>
+<br>
+<br>
 
 ## 기타
-- vscode 기준 foreach라고 치면 for(String string : args) 자동완성이 생긴다.
+- vscode 기준 foreach라고 치면 for(String string : args) 자동완성이 생긴다. + iter
 
 
 

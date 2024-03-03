@@ -21,7 +21,7 @@ import java.util.Scanner;
 public class _Quiz_13 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        try (BufferedReader br = new BufferedReader(new FileReader("src/chap_13/saying.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("saying.txt"))) {
             System.out.println("속담 퀴즈입니다. 빈 칸에 알맞은 말을 입력하시오. (주관식)");
             System.out.println("-------------------------------------------------");
 
