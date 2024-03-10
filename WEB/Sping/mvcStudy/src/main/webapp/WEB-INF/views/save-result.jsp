@@ -7,7 +7,7 @@
 <body>
     성공
 <ul>
-    <li>id=${member.id}</li>
+    <li>id=${member.id}</li>    <!--  Spring MVC의 ModelAndView 객체에서 해당 키(key)에 해당하는 값(value)을 가져와서 템플릿(여기서는 JSP 파일)에 출력 -->
     <li>username=${member.username}</li>
     <li>age=${member.age}</li>
 </ul>
