@@ -573,12 +573,21 @@ public HelloData responseBodyJsonV2() {
 ## 타임 리프 (thymeleaf)
 > HTML과 같은 웹 페이지를 동적으로 표현할 수 있게 도와주는 자바 템플릿 엔진이다. 예를 들면 사용자 정보를 동적으로 웹 페이지에 표시 할때 데이터베이스 같은 저장소에서 데이터를 가져와 웹 페이지에 띄워줄 수 있다.
 
+    특징
+
+    1. 서버 사이드 HTML 렌더링 (SSR) : 백엔드 서버에서 HTML을 동적으로 렌더링 하는데 사용한다.
+
+    2. 내츄럴 템플릿 : 순수 HTML을 최대한 유지하려는 특징이 있다. 웹 브라우저에서 파일을 직접 열어도 내용을 확인 할 수 있다.
+
+    3. 스프링 통합 지원 : 타임리프는 스프링과 통합되어 스프링의 다양한 기능을 편리하게 통합해서 사용할 수 있게 지원한다.
+
 - `<html xmlns:th="http://www.thymeleaf.org">` 기본적으로 라이브러리를 설치하고 해당 선언을 넣어줘야 타임 리프를 사용할 수 있다.
+
 #### 자세한 활용 방법은 `thymeleaf` 프로젝트 확인하기
 
 <br>
 
-- 간단한 사용법 
+- 간단한 사용 예시
 ``` html
 <!--
 @Controller
@@ -606,6 +615,10 @@ public class ExampleController {
     <a href="item.html" th:href="@{/item}">링크</a>
     <!-- th:href="@{/basic/items/{itemId}(itemId=${item.id})}" URL표현식에서는 변수가 있을 경우 해당 방법이나 리터럴 대체 문법을 사용할 수 있다.-->
 
+    <span th:text="'hello'">
+    <!-- 타임리프에서 문자리터럴은 항상 '(작은 따옴표)로 감싸야한다. -->
+    <!-- 리터럴 대체로 <span th:text="|hello|"> 로도 사용 가능하다.-->
+
     <div th:if="${age lt 18}">
         <p>미성년자입니다.</p>
     </div>
@@ -619,11 +632,45 @@ public class ExampleController {
 </body>
 </html>
 ```
-> 컨트롤러에서 모델 데이터를 받아와 사용할 수 있고 타임리프 뷰 탬플릿을 거치면 값을 th를 사용한 값으로 변경한다. 예를 들어 `a href="item.html" th:href="/item"` 이 코드에서 그냥 html로 열면 item.html 로 열리고 타임리프 뷰 탬플릿을 거치면 /item 경로로 열리게 된다. html을 파일로 직접 연다면 th:xxx가 있더라도 웹 브라우저는 th속성을 알지 못해 무시한다.
+> 컨트롤러에서 모델 데이터를 받아와 사용할 수 있고 타임리프 뷰 탬플릿을 거치면 값을 th를 사용한 값으로 변경한다. 예를 들어 `a href="item.html" th:href="/item"` 이 코드에서 그냥 html로 열면 item.html 로 열리고 타임리프 뷰 탬플릿을 거치면 /item 경로로 열리게 된다. html을 파일로 직접 연다면 th:xxx가 있더라도 웹 브라우저는 th속성을 알지 못해 무시한다.  
 
 #### 핵심은 th:xxx 가 붙은 부분은 서버사이드에서 렌더링 되고 기존 것을 대체 된다. th:xxx가 없다면 기존 html 속성이 그대로 사용된다. 
 
 #### 가끔 vscode에서 스프링 부트 템플릿 html을 작성할 때 자동완성이 안될 수도 있다. 그럴 때는 오른쪽 하단에 언어 모드를 선택해 html로 변경해준다.
+
+참고: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#standard-expression-syntax
+
+<br>
+<br>
+<br>
+
+## 타임리프와 스프링의 통합
+> 타임리프는 스프링 없이도 동작하지만 스프링과의 통합을 위한 다양한 기능을 제공한다. 
+
+- 스프링 통합으로 추가되는 기능들
+``` 
+- 스프링의 SpringEL 문법 통합
+
+- ${@myBean.doSomething()} 처럼 스프링 빈 호출 지원
+
+- 편리한 폼 관리를 위한 추가 속성
+
+- th:object (기능 강화, 폼 커맨드 객체 선택)
+
+- th:field , th:errors , th:errorclass
+
+- 폼 컴포넌트 기능
+
+- checkbox, radio button, List 등을 편리하게 사용할 수 있는 기능 지원
+
+- 스프링의 메시지, 국제화 기능의 편리한 통합
+
+- 스프링의 검증, 오류 처리 통합
+
+- 스프링의 변환 서비스 통합(ConversionService)
+```
+
+- 자세한 기능에 대한 내용은 springForm 폴더안에 있다.
 
 <br>
 <br>
@@ -664,6 +711,218 @@ public String save(@ModelAttribute Item item,RedirectAttributes redirectAttribut
 <br>
 <br>
 
+
+## 메시지 / 국제화
+
+#### 메시지
+> 애플리케이션에서 사용되는 모든 텍스트 메시지를 중앙에서 관리하여 효율적으로 업데이트할 수 있다. 예를 들어 화면에 보이는 '상품명' 이라는 단어를 모두 '상품이름' 으로 고치려면 모든 화면들을 찾아가 모두 변경해야한다. 이걸 해결하는 것이 바로 메시지 기능이다.
+
+- messages.properties 라는 메시지 관리용 파일을 만들어 중앙관리 하는 방식이 있다.
+
+- 타임리프의 메시지 표현식 `#{...}` 를 통해 쉽게 스프링의 메시지를 조회 가능하다.
+    - `th:text="#{hello.name(${item.itemName})}"` => 파라미터는 이런 식으로 해야한다.
+
+- 파일의 위치는 `/resources/messages.properties` 에 두면 된다.
+
+- 만약 Locale 선택 방식을 변경하려면 LocaleResolver 의 구현체를 변경해서 쿠키나 세션 기반의 Locale 선택 기능을 사용할 수 있다.
+
+- 아래와 같이 메시지 소스를 설정할 수 있다.
+```
+// application.properties
+// 스프링 부트 메시지 소스 기본 값 : spring.messages.basename=messages
+
+spring.messages.basename=messages,config.i18n.messages
+```
+
+
+<br>
+
+#### 국제화 
+> 애플리케이션을 다양한 언어로 제공하고 사용자가 원하는 언어로 애플리케이션의 메시지를 표시할 수 있도록 한다.
+
+- 메시지 파일( messages.properties )을 각 나라별로 별도로 관리하면 서비스를 국제화 할 수 있다.
+
+- 타임리프 메시지 작업만 완료해놓으면 알아서 국제화 처리를 해준다. 크롬 설정에서 언어로 들어가서 영어를 맨 위로 올리면 확인할 수 있다.
+
+<br>
+
+#### 기능 구현 예시는 message 폴더 안에 있다.
+
+<br>
+<br>
+<br>
+
+## 검증 로직
+> 사용자 입력 데이터나 외부에서 받은 데이터를 유효성 검사하고 처리하는 과정을 의미한다. 예를 들어 상품을 등록할 때, 상품의 가격을 입력하는 창에서 글자를 입력한다면 오류 화면으로 이동하게 된다. 이렇게 되면 사용자는 폼으로 다시 이동해 처음부터 입력을 해야한다. 따라서 이런 상황에서 사용자의 입력 데이터는 유지한 채로 어떤 오류가 발생했는지 알려줘야 한다.
+
+- 컨트롤러의 중요한 역할 중 하나가 HTTP 요청이 정상인지 검증하는 것이다.
+- 오류 코드의 관리는 구체적인 것부터 덜 구체적인 것 순서로 만들어준다.
+
+<br>    
+
+- 클라이언트 검증과 서버 검증
+``` 
+클라이언트 검증
+- 자바스크립트를 통한 검증
+- 클라이언트 검증은 조작할 수 있으므로 보안에 취약
+
+서버 검증
+- HTTP요청을 받아와 서버쪽 컨트롤러 같은 곳에서 검증
+- 서버만으로 검증하면 즉각적인 고객 사용성이 부족
+- 둘을 적절히 섞어서 사용하되 최종적으로 서버 검증은 필수
+- API방식을 사용하면 API 스펙을 잘 정의해서 검증 오류를 API 응답 결과에 잘 남겨줘야함
+```
+
+<br>
+
+- 에러 메시지 우선 순위 `bindingResult.rejectValue("itemName", "required");` 일때
+``` 
+#Level1
+required.item.itemName: 상품 이름은 필수 입니다.
+
+#Level2
+required: 필수 값 입니다.
+
+# 더 디테일한 메시지 코드가 우선순위가 높다.
+```
+
+<br>
+
+#### BindingResult
+> 데이터 바인딩 시 발생하는 유효성 검증 오류를 담는 통합 인터페이스이다. 객체안에 필드 값들의 타입 같은 것들이 올바르게 바인딩 됬는지 검사해준다. 또한 FieldError, ObjectError를 한데 묶어(List) Model에 주입시켜준다. 쉽게 생각하면 오류를 담아놓는 저장소이다.
+
+``` 
+// 필드 오류
+public FieldError(String objectName, String field, String defaultMessage) {}
+
+// 글로벌 오류
+public ObjectError(String objectName, String defaultMessage) {}
+
+// int 필드에 문자열이 담길 경우
+- BindingResult 가 없으면 400 오류가 발생하면서 컨트롤러가 호출되지 않고, 오류 페이지로 이동한다.
+
+- BindingResult 가 있으면 오류 정보( FieldError )를 BindingResult 에 담아서 컨트롤러를 정상 호출한다.
+```
+> @ModelAttribute의 경우에는 잘못된 타입입력으로인해 바인딩 자체가 안되더라도 BindingResult에 담기고 Controller가 호출되는반면 @RequestBody의 경우에는
+바인딩자체가 호출이 안될때에는 Controller자체가 호출이 안된다.
+
+<br>
+
+#### WebDataBinder / @Validated
+> 검증 로직을 분리해서 사용할 때 WebDataBinder에 검증기를 추가하면 해당 컨트롤러에서는 검증기를 자동으로 적용할 수 있다. 검증기가 여러개라면 supports를 통해 구분하여 사용한다.
+
+- 스프링 부트 Validation 라이브러리를 사용하면 검증기가 없어도 자동으로 Bean Validator를 인지하고 스프링에 통합된다.
+    - 다만 글로벌 검증기를 등록해놨다면 제거해놔야 Bean Validator가 동작한다.
+
+``` java
+@InitBinder
+public void init(WebDataBinder dataBinder) {
+    log.info("init binder {}", dataBinder);
+    dataBinder.addValidators(itemValidator);
+}
+
+@PostMapping("/add")
+public String addItemV6(@Validated @ModelAttribute Item item,BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+    // 검증에 실패하면 다시 입력으로
+    if(bindingResult.hasErrors()){  
+        log.info("ERROR : {}",bindingResult);
+        return "validation/v2/addForm";
+    }  
+
+    // 성공 로직
+    Item savedItem = itemRepository.save(item);
+    redirectAttributes.addAttribute("itemId", savedItem.getId());
+    redirectAttributes.addAttribute("status", true);
+    return "redirect:/validation/v2/items/{itemId}";
+}
+```
+
+- 글로벌 설정이 필요할 때 (모든 컨트롤러에 적용)
+``` java
+@SpringBootApplication
+public class ItemServiceApplication implements WebMvcConfigurer {
+    public static void main(String[] args) {
+        SpringApplication.run(ItemServiceApplication.class, args);
+    }
+    @Override
+    public Validator getValidator() {
+        return new ItemValidator();
+    }
+}
+```
+<br>
+
+#### Bean Validation
+> 대부분의 검증 로직은 빈 값인지, 특정 크기를 넘는지와 같은 경우가 많다. 따라서 이러한 검증 로직을 모든 프로젝트에 적용할 수 있도록 애노테이션으로 만들어 놓은 것이 Bean Validation이다.
+
+``` java
+@Data
+@ScriptAssert(lang = "javascript", script = "_this.price * _this.quantity >= 10000")    // jdk버전을 낮추거나 자바스크립트 엔진을 써야함
+public class Item {
+    private Long id;
+
+    @NotBlank(message = "공백 X")
+    private String itemName;
+
+    @NotNull @Range(min=1000, max = 1000000)
+    private Integer price;
+
+    @NotNull @Max(9999)
+    private Integer quantity;
+
+    public Item() {
+    }
+
+    public Item(String itemName, Integer price, Integer quantity) {
+        this.itemName = itemName;
+        this.price = price;
+        this.quantity = quantity;
+    }
+}
+```
+    Bean Validation - 한계
+
+    - 데이터를 등록할 때와 수정할 때는 요구사항이 다를 수 있다.
+
+    - 등록시에는 id 에 값이 없어도 되지만, 수정시에는 id 값이 필수여서 @NotNull을 추가해버리면 등록시에는 id가 없기 때문에 동작을 하지 않는다.
+
+    - 이러한 등록과 수정의 요구사항이 다를 경우 충돌이 일어난다.
+
+    해결 방법
+
+    - BeanValidation의 groups 기능을 사용한다.
+
+    - Item을 직접 사용하지 않고, ItemSaveForm, ItemUpdateForm 같은 폼 전송을 위한 별도의 모델 객체를 만들어서 사용한다.
+
+    - groups 기능은 실제 잘 사용되지는 않는데, 그 이유는 실무에서는 주로 다음에 등장하는 등록용 폼 객체와 수정용 폼 객체를 분리해서 사용하기 때문이다.
+
+
+<br>
+
+#### 타임리프 스프링 검증 오류 통합 기능
+```
+#fields : #fields 로 BindingResult 가 제공하는 검증 오류에 접근할 수 있다.
+
+th:errors : 해당 필드에 오류가 있는 경우에 태그를 출력한다. th:if 의 편의 버전이다.
+
+th:errorclass : th:field 에서 지정한 필드에 오류가 있으면 class 정보를 추가한다.
+```
+
+<br>
+
+#### 기능 구현 예시는 validation 폴더 안에 있다.
+
+#### http://hibernate.org/validator/ => 검증 애노테이션 모음
+
+
+
+
+
+<br>
+<br>
+<br>
+
 ## 기타
 
 <br>
@@ -676,3 +935,7 @@ public String save(@ModelAttribute Item item,RedirectAttributes redirectAttribut
 
 #### request.setAttribute()
 > 해당 기능을 사용해 request객체에 데이터를 보관해서 뷰에 전달할 수 있다. request를 데이터를 보관하는 Model로 사용할 수 있다.
+
+<br>
+<br>
+
