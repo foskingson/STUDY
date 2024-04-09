@@ -1,43 +1,17 @@
+from typing import List
+
 class Solution:
-    def isNumber(self, s: str) -> bool:
-        s = s.lower()
-        if s.count('e') > 1:
-            return False
-        if 'e' not in s: 
-            return self.isDecimal(s) or self.isInteger(s)
-        else:
-            idx = s.find('e')
-            d_or_i = s[0:idx]
-            integer = s[idx+1:len(s)]
-            return (self.isDecimal(d_or_i) or (self.isInteger(d_or_i))) and self.isInteger(integer)
+    def grayCode(self, n: int) -> List[int]:
+        res = [0]  # 초기에 0 추가
+            
+        for i in range(n):
+            for j in range(len(res) - 1, -1, -1):
+                res.append(res[j] | (1 << i))
+            # 현재 결과에 있는 숫자들을 역순으로 읽어와서 맨 앞에 1을 추가하여 결과에 추가
+            # 예를 들어 01(1) | 10(2)가 되면 비트 or 연산을 통해 11(3)이 됨
+        return res
 
+# Example usage:
+sol = Solution()
+print(sol.grayCode(3))  # Output will be the list of gray codes for n = 3
 
-    def isDecimal(self, s:str) -> bool: 
-        dot = digit = sign = False
-        for i in range(len(s)): 
-            if s[i].isdigit():
-                digit = True
-            elif s[i] in "+-":
-                if i != 0: 
-                    return False
-            elif s[i] == ".":
-                if dot: 
-                    return False
-                dot = True
-            else:
-                return False
-        return dot and digit
-    def isInteger(self, s:str) -> bool: 
-        digit = False
-        for i in range(len(s)):
-            if s[i].isdigit():
-                digit = True
-            elif s[i] in "+-":
-                if i != 0: 
-                    return False
-            else:
-                return False
-        return digit
-
-sol=Solution()
-print(sol.isNumber("3.14e2"))
