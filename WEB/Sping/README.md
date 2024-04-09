@@ -915,9 +915,580 @@ th:errorclass : th:field 에서 지정한 필드에 오류가 있으면 class �
 
 #### http://hibernate.org/validator/ => 검증 애노테이션 모음
 
+<br>
+<br>
+<br>
+
+## 로그인
+> 일반적으로 로그인을 구현할때는 보안에 취약한 쿠키보다는 세션을 통해 구현한다.
+
+- 세션을 이용한 방식 `HttpSession`
+    - HttpSession은 서블릿(Servlet) API에서 제공하는 인터페이스로, 클라이언트와 서버 간의 상태를 유지하고 세션 데이터를 저장하는 데 사용된다.
+``` java
+@PostMapping("/login")
+public String loginV3(@Valid @ModelAttribute LoginForm form, BindingResult bindResult,HttpServletRequest request) {
+    if(bindResult.hasErrors()){
+        return "/login/loginForm";
+    }
+
+    Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
+    log.info("login? {}", loginMember);
+
+    if(loginMember==null){
+        bindResult.reject("loginFail","아이디 또는 비밀번호가 맞지 않습니다.");
+        return "/login/loginForm";
+    }
+
+    // 로그인 성공 처리 TODO
+    // 세션이 있으면 세션 반환 없으면 신규 세션 생성 / false를 인자로 주면 세션이 없을때 세션을 생성하지 않고 null 반환
+    HttpSession session = request.getSession();
+    // 세션에 로그인 회원 정보 저장
+    session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+    
+    return "redirect:/";
+}
+
+@PostMapping("/logout")
+public String logoutV3(HttpServletRequest request,HttpServletResponse response){
+    HttpSession session = request.getSession(false);
+    if(session!=null){
+        session.invalidate();
+    }
+    return "redirect:/";
+}
+
+@GetMapping("/")
+public String homeLoginV3Spring(
+    @SessionAttribute(name = SessionConst.LOGIN_MEMBER,required = false) Member loginMember,Model model) {
+        // 스프링은 세션을 더 편하게 사용하도록 애노테이션 지원
+    if(loginMember==null){
+        return "home";
+    }
+    
+
+    model.addAttribute("member", loginMember);
+    return "loginHome";
+    
+}
+```
+    로그인을 처음 시도하면 URL에 `jsessionid`가 붙어서 오류가 나기 때문에 session.tracking-modes를 사용해야 한다. 
+    server.servlet.session.tracking-modes=cookie => 이걸 설정에 넣어주면 된다.
+
+#### 실무에서 주의할점
+> 세션은 최소한의 데이터만 보관해야 한다. 보관한 데이터의 용량 * 사용자 수로 세션의 메모리가 급격하게 늘어나 장애로 이어질 수 있다. member가 있다면 member의 id정도만 해서 작게 보관해야 한다.
+
+
+<br>
+
+- 세션 정보 출력해보기
+``` java
+log.info("sessionId={}",session.getId());
+log.info("sessionMax={}",session.getMaxInactiveInterval());
+// session.setMaxInactiveInterval(1800); => 1800초 , 추가해서 부분적으로 타임아웃 설정 가능
+// server.servlet.session.timeout=60 => 60초, 설정파일에 추가해서 글로벌하게 설정할 수도 있다.
+// 세션 타임아웃 설정은 사용자가 서버에 최근 요청한 시간을 기준으로 30분정도 유지하는 것이 좋다. 메모리 효율 및 보안 측면
+log.info("creationTime={}",new Date(session.getCreationTime()) );
+log.info("lastAccessedTime={}",new Date(session.getLastAccessedTime()));
+log.info("isNew={}",session.isNew());
+```
+
+<br>
+
+#### 로그인 필터, 인터셉터
+> 일반적으로 로그인을 한 사용자는 관리 페이지에 들어갈 수 있지만 로그인을 하지 않은 사용자는 들어가면 안된다. 이것을 적용하기 위해서 서블릿 필터나 스프링 인터셉트를 사용할 수 있다. `HttpServletRequest` 를 통해 사용할 수 있다.
+
+- 서블릿 필터: 서블릿이 지원하는 수문장이다.
+    - 필터 흐름: HTTP 요청 => WAS => 필터 => 서블릿 => 컨트롤러 / 필터를 적용하면 필터부분에서 요청이 끝난다. 로그인 여부를 체크할 수 있다.
+    - 필터는 여러개 추가해서 로그를 남기는 필터를 먼저 적용하고 로그인 여부를 체크하는 필터를 만들 수 있다.
+``` java
+@Slf4j
+public class LoginCheckFilter implements Filter {
+
+    private static final String[] whitelist={"/","/members/add","/login","/logout","/css/*"};
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
+        HttpServletRequest httpRequest=(HttpServletRequest)request;
+        String requestURI=httpRequest.getRequestURI();
+
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        try {
+            log.info("인증 체크 필터 시작 {}",requestURI);
+
+            if (isLoginCheckPath(requestURI)) {
+                log.info("인증 체크 로직 실행 {}", requestURI);
+                HttpSession session = httpRequest.getSession(false);
+                if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER)==null) {
+                    log.info("미인증 사용자 요청 {}", requestURI);
+
+                    // 로그인 리다이렉트
+                    httpResponse.sendRedirect("/login?redirectURL="+requestURI);
+                    return;
+                }
+            }
+
+            chain.doFilter(request, response);
+            // 다음 필터가 있으면 필터를 호출하고, 필터가 없으면 서블릿을 호출한다. 만약 이 로직을 호출하지 않으면 다음 단계로 진행되지 않는다.
+        } catch (Exception e) {
+            throw e;
+        }finally{
+            log.info("인증체크 필터 종료 {}", requestURI);
+        }
+    }
+
+    /* 화이트 리스트의 경우 인증 체크 xx */
+    /*
+    스프링에서는 빈의 이름을 지정할 때 사용되는 패턴 매칭 기능에서 이 메서드를 사용할 수 있다.
+     예를 들어, simpleMatch("myBean*", "myBeanName")과 같이 호출하면 "myBeanName"이 "myBean*" 패턴과 일치하는지를 확인할 수 있다. 
+     */
+    private boolean isLoginCheckPath(String requestURI){
+        return !PatternMatchUtils.simpleMatch(whitelist, requestURI); 
+    }
+}
+
+// 빈 등록도 해줘야 함
+@Bean
+public FilterRegistrationBean loginCheckFilter(){
+    FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+
+    filterRegistrationBean.setFilter(new LoginCheckFilter());
+    filterRegistrationBean.setOrder(2);
+    filterRegistrationBean.addUrlPatterns("/*");
+
+    return filterRegistrationBean;
+}
+```
+<br>
+
+- 스프링 인터셉터: HTTP 요청 처리의 전후에 실행되는 기능을 제공하는 기술이다. 서블릿 필터 처럼 공통 관심 사항을 효과적으로 해결한다. 
+    - 서블릿 필터가 서블릿이 제공하는 기술이라면 스프링 인터셉터는 스프링 MVC가 제공하는 기술이다.
+    - 스프링 인터셉터: HTTP 요청 -> WAS -> 필터 -> 서블릿 -> 스프링 인터셉터 -> 컨트롤러
+    - 일반적으로 필터보다 스프링 인터셉터를 많이 사용한다. 더 편리하고 정교하고 다양한 기능을 제공한다.
+    - 필터처럼 체인 기능 제공
+    - 인터셉터는 컨트롤러 호출 전( preHandle ), 호출 후( postHandle ), 요청 완료 이후( afterCompletion )와 같이 단계적으로 잘 세분화 되어 있다.
+
+``` java
+@Override   // implements HandlerInterceptor 오버라이딩
+public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+        throws Exception {
+
+    String requestURI = request.getRequestURI();
+    log.info("인증 체크 인터셉터 실행 {}",requestURI);
+
+    HttpSession session = request.getSession();
+
+    if(session==null || session.getAttribute(SessionConst.LOGIN_MEMBER)==null){
+        log.info("미인증 사용자 요청 {}",requestURI);
+        response.sendRedirect("/login?redirectURL=" + requestURI);
+        return false;
+    }
+    return true;
+}
+
+
+@Override   // webConfig 파일 내부 implements WebMvcConfigurer 오버라이딩
+public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(new LoginCheckInterceptor())
+        .order(1)   // 체인 순서
+        .addPathPatterns("/**") 
+        .excludePathPatterns(   // 해당 경로는 제외
+        "/", "/members/add", "/login", "/logout",
+        "/css/**", "/*.ico", "/error"
+        );
+}
+```
+> 인터셉터가 필터보다 더 세밀하게 설정 가능하다.
+
+<br>
+<br>
+
+#### ArgumentResolver 활용
+> 스프링에서 제공하는 기능으로 HTTP 요청의 파라미터를 컨트롤러의 인자로 바로 매핑하는 기능을 제공한다. 공통 작업이 필요할 때 컨트롤러를 더욱 편리하게 조작할 수 있다.
+
+```java
+@Target(ElementType.PARAMETER) // 파라미터에만 사용
+@Retention(RetentionPolicy.RUNTIME) // 리플렉션 등을 활용할 수 있도록 런타임까지 애노테이션 정보가 남아있음
+public @interface Login {
+}
+
+/*
+ supportsParameter() : @Login 애노테이션이 있으면서 Member 타입이면 해당 ArgumentResolver가 사용된다.
+*/
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver{
+@Override
+public boolean supportsParameter(MethodParameter parameter) {
+    boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
+    boolean hasMemberType = Member.class.isAssignableFrom(parameter.getParameterType());
+    return hasLoginAnnotation && hasMemberType;
+}
+/*
+ resolveArgument() : 컨트롤러 호출 직전에 호출 되어서 필요한 파라미터 정보를 생성해준다. 
+ 여기서는 세션에 있는 로그인 회원 정보인 member 객체를 찾아서 반환해준다. 이후 스프링MVC는 컨트롤러의 메서드를 호출
+    하면서 여기에서 반환된 member 객체를 파라미터에 전달해준다.
+*/
+@Override
+public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    HttpServletRequest request = (HttpServletRequest)webRequest.getNativeRequest();
+    HttpSession session = request.getSession(false);
+    if (session==null) {
+        return null;
+    }
+    return session.getAttribute(SessionConst.LOGIN_MEMBER);
+    }
+}
+
+// 아래는 ArgumentResolver를 통해 만든 애노테이션을 활용한 예시
+@GetMapping("/")
+public String homeLoginV3ArgumentResolver(@Login Member loginMember,Model model) {
+    if(loginMember==null){
+        return "home";
+    }
+
+    model.addAttribute("member", loginMember);
+    return "loginHome";
+}
+```
+
+<br>
+<br>
+<br>
+
+## 오류페이지 / 예외처리
+> 기본적으로 스프링은 오류 페이지 관련 컨트롤러가 내장되어있기 때문에 tempates 혹은 static 경로에 error폴더를 만들어 4xx.html을 해서 모든 4xx에러를 해당 페이지로
+이동시키는 기능이 있다. 오류 페이지를 만들어서 지정된 경로에 이름으로 갖다 놓기만 하면 된다.
+
+- 만약 5xx.html과 500.html이 있다면 더 구체적인 500.html이 우선순위가 높다.
+- 뷰 선택 우선순위 
+```
+1. 뷰 템플릿
+resources/templates/error/500.html
+resources/templates/error/5xx.html
+
+2. 정적 리소스( static , public )
+resources/static/error/400.html
+resources/static/error/404.html
+resources/static/error/4xx.html
+
+3. 적용 대상이 없을 때 뷰 이름( error )
+resources/templates/error.html
+```
+
+<br>
+
+### 예외처리 흐름
+```
+1. WAS(/error-ex, dispatchType=REQUEST) -> 필터 -> 서블릿 -> 인터셉터 -> 컨트롤러
+
+2. WAS(여기까지 전파) <- 필터 <- 서블릿 <- 인터셉터 <- 컨트롤러(예외발생)
+
+3. WAS 오류 페이지 확인
+
+4. WAS(/error-page/500, dispatchType=ERROR) -> 필터(x) -> 서블릿 -> 인터셉(x) -> 컨트롤러(/error-page/500) -> View
+```
+
+<br>
+
+### ExceptionResolver
+> 일반적으로 스프링 애플리케이션에서 예외가 발생하면, 이 예외를 처리하고 적절한 응답을 생성하기 위해 ExceptionResolver가 사용된다. 예외 타입에 따라 사용자에게 보여줄 에러 페이지를 지정할 수 있고 사용자 정의 예외 처리 로직을 사용할 수도 있다. ExceptionResolver를 사용하면 예외가 서블릿까지 전파되기 전에 예외를 처리하고 클라이언트에게 적절한 응답을 보내어 정상적인 흐름처럼 보이게 할 수 있다.
+
+- 예를 들어 클라이언트가 인자를 잘못 줬을때 생기는 에러처럼 클라이언트가 잘못 했을 경우인데도 500 에러로 뜨는 경우가 있다. 따라서 해당 기능을 사용하여 500에러를 400에러로 처리해줄 수 있다.
+
+<br>
+
+- 스프링이 제공하는 ExceptionResolver
+```
+HandlerExceptionResolverComposite 에 다음 순서로 등록
+
+1. ExceptionHandlerExceptionResolver: 컨트롤러 메서드에서 발생하는 예외를 처리하고, 예외에 맞는 적절한 응답을 생성하여 클라이언트에 반환한다. @ExceptionHandler 에 지정한 부모 클래스는 자식 클래스까지 처리할 수 있다. 만약 자식 예외처리도 있으면 더 자세한 자식 예외가 호출된다. 실무에서 API 예외 처리는 대부분 이 기능을 사용한다.
+
+2. ResponseStatusExceptionResolver: 예외에 따라서 HTTP 상태 코드를 지정해주는 역할을 한다.
+
+3. DefaultHandlerExceptionResolver: 스프링 내부에서 발생하는 스프링 예외를 해결한다. 우선 순위가 가장 낮다.
+```
+
+<br>
+
+1. ExceptionHandlerExceptionResolver 사용 예시
+``` java
+// 1번째 방식
+@ResponseStatus(HttpStatus.BAD_REQUEST) // 아래 방식처럼 처리하면 정상흐름으로 처리되어 200이 뜨는데 이 status를 설정해줄 수 있다.
+@ExceptionHandler(IllegalArgumentException.class)
+public ErrorResult illegalExHandler(IllegalArgumentException e){
+    log.error("[exceptionHanler] ex", e);
+    return new ErrorResult("Bad", e.getMessage());
+}
+
+// 2번째 방식
+@ExceptionHandler
+public ResponseEntity<ErrorResult> userExHandler(UserException e){
+    log.error("[exceptionHandler] ex", e);
+    ErrorResult errorResult = new ErrorResult("USER-EX", e.getMessage());
+    return new ResponseEntity<>(errorResult,HttpStatus.BAD_REQUEST);
+}
+
+// 3번째 방식
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+@ExceptionHandler
+public ErrorResult exHandler(Exception e){  // 위에서 처리 못하는 예외를 모두 처리해줌 / Exception이 최상위 예외이기 때문
+    log.error("[exceptionHandler] ex", e);
+    return new ErrorResult("EX", "내부 오류");
+}
+```
+> https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html#mvc-ann-exceptionhandler-args => 자세한 파리미터 응답 참고
+
+<br>
+
+2. ResponseStatusExceptionResolver 사용 예시
+``` java
+//  @ResponseStatus 애노테이션을 적용한 방식
+@ResponseStatus(code = HttpStatus.NOT_FOUND,reason = "잘못된 요청")
+public class BadRequestException extends RuntimeException {
+}
+
+@GetMapping("/api/response-status-ex1")
+public String responseStatusEx1() {
+    throw new BadRequestException();
+}
+
+
+// 애노테이션을 직접 넣어야 하는데, 내가 코드를 수정할 수 없는 라이브러리의 예외 코드 같은 곳의 경우
+@GetMapping("/api/response-status-ex2")
+public String responseStatusEx2() {
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND,"error.code", new IllegalArgumentException());
+}
+```
+
+<br>
+
+3. DefaultHandlerExceptionResolver 
+> DefaultHandlerExceptionResolver 따로 설정을 안해도 스프링을 사용하면 알아서 처리해준다. 대표적으로 파라미터 바인딩 시점에 타입이 맞지 않으면 내부에서 TypeMismatchException이 발생하는데, 이 경우 예외가 발생했기 때문에 그냥 두면 서블릿 컨테이너까지 오류가 올라가고, 결과적으로 500 오류가 발생해야 하는데 DefaultHandlerExceptionResolver 는 이것을 500 오류가 아니라 HTTP 상태 코드 400 오류로 변경해준다.
+
+<br>
+
+### @ControllerAdvice/@RestControllerAdvice
+> @ControllerAdvice는 스프링 프레임워크에서 전역적으로 컨트롤러에 적용되는 예외 처리와 모델 속성의 바인딩 등을 담당하는 애노테이션이다. 이를 사용하면 여러 컨트롤러에서 발생하는 예외를 일괄적으로 처리하거나, 모든 컨트롤러에 전역적으로 모델 속성을 추가할 수 있다. 쉽게 말해서 컨트롤러와 예외 처리용 로직을 분리할 수 있다.
+
+```
+@ControllerAdvice 는 대상으로 지정한 여러 컨트롤러에 @ExceptionHandler , @InitBinder 기능을 부여해주는 역할을 한다.
+
+@ControllerAdvice 에 대상을 지정하지 않으면 모든 컨트롤러에 적용된다. (글로벌 적용)
+
+@RestControllerAdvice 는 @ControllerAdvice 와 같고, @ResponseBody 가 추가되어 있다. 
+
+@Controller , @RestController 의 차이와 같다.
+```
+
+<br>
+
+- 대상 지정 방법
+``` java
+@ControllerAdvice(annotations = RestController.class)
+public class ExampleAdvice1 {}
+
+@ControllerAdvice("org.example.controllers")    // 자주 사용
+public class ExampleAdvice2 {}
+
+@ControllerAdvice(assignableTypes = {ControllerInterface.class, AbstractController.class})
+public class ExampleAdvice3 {}
+```
+
+
+<br>
+
+#### API 예외를 처리할 때는 ExceptionHandler를 사용하여 처리하고, HTML 화면을 제공할 때 예외 처리는 BasicErrorController를 사용하여 처리한다.
 
 
 
+<br>
+<br>
+<br>
+
+## 스프링 타입 컨버터
+>스프링 타입 컨버터는 복잡한 타입 변환을 개발자가 직접적으로 하지 않아도 자동으로 타입을 변환해주는 스프링의 기능이다. 예를 들어 `HttpServletRequest request`를 통해 10이라는 data를 받아오면 문자열 10이 들어온다. 스프링이 제공하는 `@RequestParam Integer data`를 사용하면 int타입으로 데이터를 받아올 수 있는데 이때 동작하는 것이 스프링 타입 컨버터이다.
+
+- `@ModelAttribute`나 `@PathVariable` 역시 스프링 타입 컨버터가 동작한다.
+
+- 스프링은 확장 가능한 컨버터 인터페이스를 제공한다.
+``` java
+package org.springframework.core.convert.converter;
+public interface Converter<S, T> {  // S를 넣으면 T로 컨버트된다.
+ T convert(S source);
+}
+```
+
+<br>
+
+#### 컨버터 구현해보기
+> 컨버터를 직접 구현하기전에도 스프링의 기본 컨버터가 있기 때문에 동작 한다. 우리가 구현한 컨버터를 추가하면 기본 제공하는 컨버터보다 우선순위가 높다.
+``` java
+// 컨버터 직접 구현해보기
+public class StringToIntegerConverter implements Converter<String,Integer> {
+    @Override
+    public Integer convert(String source) {
+        log.info("convert source={}", source);
+        return Integer.valueOf(source);
+    }
+}
+
+// 설정 파일안에 구현한 컨버터 등록하기
+@Configuration
+public class WebConfig implements WebMvcConfigurer {    
+    @Override
+    public void addFormatters(FormatterRegistry registry) { 
+        registry.addConverter(new StringToIntegerConverter());
+        registry.addConverter(new IntegerToStringConverter());
+        registry.addConverter(new StringToIpPortConverter());
+        registry.addConverter(new IpPortToStringConverter());
+    }
+}
+
+// http://localhost:8080/hello-v2?data=10로 접속해보면 정수 10으로 잘 변환되는 것을 확인 가능
+@GetMapping("/hello-v2")
+public String helloV2(@RequestParam Integer data) {
+    System.out.println("data= "+data);
+    return "ok";
+}
+
+```
+
+<br>
+
+#### 타임리프와 컨버트
+- th:field는 자동으로 String으로 컨버트 해준다.
+- 다른 방법으로 컨버트를 적용하려면 {}를 두번 써주면 된다.
+```
+변수 표현식 : ${...}
+컨버전 서비스 적용 : ${{...}}
+```
+
+<br>
+
+#### 포맷터
+> 객체를 특정한 포멧에 맞추어 출력하거나 또는 그 반대의 역할을 하는 것에 특화된 기능이 바로 포멧터 이다. 포맷터( Formatter )는 객체를 문자로 변경하고, 문자를 객체로 변경하는 두 가지 기능을 모두 수행한다. Formatter는 문자에 특화되었다 Converter의 특별한 버전이다. Locale을 통한 현지화도 가능하다. 쉽게 말하자면 컨버터는 타입을 변환하고 포맷터는 지정한 형식 및 타입으로 변환해준다.
+
+- 스프링은 자바에서 기본으로 제공하는 타입들에 대해 수 많은 포맷터를 기본으로 제공한다.
+
+``` java
+// 1000을 1,000로 변환하거나 그 반대
+public class MyNumberFormatter implements Formatter<Number> {
+    @Override
+    public String print(Number object, Locale locale) {
+        log.info("object={}, locale={}",object,locale);
+        NumberFormat instance = NumberFormat.getInstance(locale);
+        return instance.format(object);
+    }
+    @Override
+    public Number parse(String text, Locale locale) throws ParseException {
+        log.info("text={} , locale={}",text,locale);
+        NumberFormat format = NumberFormat.getInstance(locale);
+        Number parse = format.parse(text);
+        return parse;
+    }
+}
+
+@Test
+void testParse() throws ParseException {
+    Number res = formatter.parse("1,000", Locale.KOREA);
+    assertThat(res).isEqualTo(1000L);
+}   
+
+@Test
+void testPrint() {
+    String result = formatter.print(1000, Locale.KOREA);
+    assertThat(result).isEqualTo("1,000");
+}
+
+// 컨버전 서비스를 통해 포맷터 등록
+@Test
+void formatting컨버전서비스(){
+    DefaultFormattingConversionService cv = new DefaultFormattingConversionService();
+    //포맷터 등록
+    cv.addFormatter(new MyNumberFormatter());
+    //포맷터 사용
+    assertThat(cv.convert(1000, String.class)).isEqualTo("1,000");
+    assertThat(cv.convert("1,000",Long.class)).isEqualTo(1000L);
+
+}
+
+// 각 필드마다 형식 지정 가능
+@Data
+static class Form{
+    @NumberFormat(pattern = "###,###")
+    private Integer number;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime localDateTime;
+}
+```
+
+#### 컨버터와 포맷터 모두 컨버전 서비스를 통해 일관성있게 관리할 수 있다.
+#### 메시지 컨버터( HttpMessageConverter )에는 컨버전 서비스가 적용되지 않는다.
+
+<br>
+<br>
+<br>
+
+
+## 파일 업로드
+> HTTP에서 파일을 업로드 하기 위해서는 multipart/form-data라는 전송 방식을 사용한다. 따로 Form태그에 enctype="multipart/form-data"를 지정해야 한다. 스프링에서는 그렇게 전송한 데이터를 받아서 사용만 하면 된다.
+
+<br>
+
+1. 설정 파일에 경로 설정해놓기
+``` 
+*application.properties*
+
+file.dir=D:/temp/file/
+```
+
+<br>
+
+2. 프로퍼티 값 사용을 위해 컨트롤러에 추가
+``` java
+@Value("${file.dir}")
+private String fileDir;
+```
+
+<br>
+
+3. 파일 저장하기 2가지 방법
+``` java
+// HttpServletRequest 사용
+@PostMapping("/upload")
+public String savFileV1(HttpServletRequest request) throws IOException, ServletException {
+    Collection<Part> parts = request.getParts();
+    for (Part part : parts) {
+        // 파일에 저장
+        if (StringUtils.hasText(part.getSubmittedFileName())) {
+            String fullPath = fileDir+part.getSubmittedFileName();
+            log.info("파일저장 경로: {}", fullPath);
+            part.write(fullPath);
+        }
+    }
+    return "upload-form";
+}
+
+// @RequestParam 사용
+@PostMapping("/upload")
+public String saveFile(@RequestParam String itemName,
+                        @RequestParam MultipartFile file,HttpServletRequest request
+) throws IllegalStateException, IOException {
+    if (!file.isEmpty()) {
+        String fullPath=fileDir+file.getOriginalFilename();
+        log.info("파일 경로={}", fullPath);
+        file.transferTo(new File(fullPath));
+    }
+
+    return "upload-form";
+}
+```
+> 추가 데이터 정보 조회는 upload 프로젝트 내부 컨트롤러 확인하기
+
+
+#### 사진과 첨부파일 올리고 확인하는 예시는 upload내부 ItemController 확인하기
 
 <br>
 <br>
