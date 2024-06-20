@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 
-@Import(JdbcTemplateV3Config.class)
-@Slf4j
+@Import(V2Config.class)
+@Slf4j 
 @SpringBootApplication(scanBasePackages = "hello.itemservice.web")
 public class ItemServiceApplication {
 

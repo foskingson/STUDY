@@ -1,4 +1,4 @@
-# 스프링 DB 연동
+# 스프링 DB 접근
 
 <br>
 <br>
@@ -286,6 +286,172 @@ public class TransactionTemplate {
 
 <br>
 
+### 트랜잭션 AOP 주의사항
+> `@Transactional` 을 사용하면 스프링의 트랜잭션 AOP가 적용된다. 트랜잭션 AOP는 기본적으로 프록시 방식의 AOP를 사용한다. `@Transactional` 을 적용하면 프록시 객체가 요청을 먼저 받아서 트랜잭션을 처리하고, 실제 객체를 호출해준다. 따라서 트랜잭션을 적용하려면 항상 프록시를 통해서 대상 객체(Target)을 호출해야 한다. 만약 프록시를 거치지 않고 대상 객체를 직접 호출하게 되면 AOP가 적용되지 않고, 트랜잭션도 적용되지 않는다
+
+<br>
+
+- 주의1. 프록시 메서드 내부 호출 예시
+``` java
+@Slf4j
+@SpringBootTest
+public class InternalCallV1Test {
+    @Autowired
+    CallService callService;
+
+    @Test
+    void printProxy() {
+        log.info("callService class={}", callService.getClass());
+    }
+
+    @Test
+    void internalCall() {
+        callService.internal();
+    }
+
+    @Test
+    void externalCall() {   // 이걸 실행해도 트랜잭션이 동작하지 않는다.
+        callService.external();
+    }
+
+    @TestConfiguration
+    static class InternalCallV1Config {
+        @Bean
+        CallService callService() {
+            return new CallService();
+        }
+    }
+
+    @Slf4j
+    static class CallService {
+        public void external() {
+            log.info("call external");
+            printTxInfo();
+            internal(); // 메서드 내부 호출 상황
+        }
+
+        @Transactional
+        public void internal() {
+            log.info("call internal");
+            printTxInfo();
+        }
+
+        private void printTxInfo() {
+            boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+            log.info("tx active={}", txActive);
+        }
+    }
+}
+```
+```
+1. 클라이언트인 테스트 코드는 callService.external() 을 호출한다. 여기서 callService 는 트랜잭션 프록시이다.
+
+2. callService 의 트랜잭션 프록시가 호출된다.
+
+3. external() 메서드에는 @Transactional 이 없다. 따라서 트랜잭션 프록시는 트랜잭션을 적용하지 않는다.
+
+4. 트랜잭션 적용하지 않고, 실제 callService 객체 인스턴스의 external() 을 호출한다.
+
+5. external() 은 내부에서 internal() 메서드를 호출한다. 그런데 여기서 문제가 발생한다. 프록시를 거치지 않고 메서드를 호출해버린다.
+
+=> 해결 방법 : internal() 메서드를 별도의 클래스로 분리하여 해결할 수 있다.
+```
+> 결론적으로 트랜잭션 AOP는 같은 클래스 내부에서 프록시를 내부호출로 불러오면 동작하지 않지만 별도의 클래스로 분리하여 외부호출한다면 정상 동작한다.
+
+
+<br>
+
+- 주의2. 스프링의 트랜잭션 AOP 기능은 public 메서드에만 트랜잭션을 적용하도록 기본 설정이 되어있다. 그래서protected , private , package-visible 에는 트랜잭션이 적용되지 않는다.
+
+<br>
+
+- 주의3. 스프링 초기화 시점에는 트랜잭션 AOP가 적용되지 않을 수 있다.
+``` java
+@Slf4j
+@SpringBootTest
+public class InitTxTest {
+
+    @Autowired
+    Hello hello;
+
+    @Test
+    void go() { // 초기화 코드는 스프링이 초기화 시점에 호출한다.
+    }
+
+    @TestConfiguration
+    static class InitTxTestConfig {
+        @Bean
+        Hello hello() {
+            return new Hello();
+        }
+    }
+
+    static class Hello {
+
+        @PostConstruct // 초기화 코드
+        @Transactional
+        public void initV1() {
+            boolean isActive = TransactionSynchronizationManager.isActualTransactionActive();
+            log.info("Hello init @PostConstruct tx active={}", isActive);
+        }
+
+        @EventListener(value = ApplicationReadyEvent.class) // 스프링 컨테이너가 완전히 준비되었을 때 호출
+        @Transactional
+        public void init2() {
+            boolean isActive = TransactionSynchronizationManager.isActualTransactionActive();
+            log.info("Hello init ApplicationReadyEvent tx active={}", isActive);
+        }
+    }
+}
+```
+> 왜냐하면 초기화 코드가 먼저 호출되고, 그 다음에 트랜잭션 AOP가 적용되기 때문이다. 따라서 초기화 시점에는 해당 메서드에서 트랜잭션을 획득할 수 없다. 가장 좋은 대안은 `@EventListener(value = ApplicationReadyEvent.class)` 를 사용해서 스프링 컨테이너가 완전히 준비되었을 때 메서드를 호출하는 것이다.
+
+<br>
+<br>
+
+### 트랜잭션의 옵션
+
+```java
+public @interface Transactional {
+    String value() default "";
+    String transactionManager() default "";
+    Class<? extends Throwable>[] rollbackFor() default {};
+    Class<? extends Throwable>[] noRollbackFor() default {};
+    Propagation propagation() default Propagation.REQUIRED;
+    Isolation isolation() default Isolation.DEFAULT;
+    int timeout() default TransactionDefinition.TIMEOUT_DEFAULT;
+    boolean readOnly() default false;
+    String[] label() default {}
+ }
+ ```
+
+1. rollbackFor
+    - 이 옵션을 사용하면 기본 정책에 추가로 어떤 예외가 발생할 때 롤백할 지 지정할 수 있다. 체크 예외라도 롤백하게 할 수 있다.
+    - `@Transactional(rollbackFor = Exception.class)`
+
+2. rollbackFor 와 반대이다. 기본 정책에 추가로 어떤 예외가 발생했을 때 롤백하면 안되는지 지정할 수 있다.
+
+3. propagation
+
+4. isolation
+    - 트랜잭션 격리 수준을 지정할 수 있다. 기본 값은 데이터베이스에서 설정한 트랜잭션 격리 수준을 사용하는 DEFAULT이다.
+    - 애플리케이션 개발자가 트랜잭션 격리 수준을 직접 지정하는 경우는 드물다.
+
+5. timeout
+    - 트랜잭션 수행 시간에 대한 타임아웃을 초 단위로 지정한다. 기본 값은 트랜잭션 시스템의 타임아웃을 사용한다.
+    - 운영환경에 따라 동작하는 경우도 있고 그렇지 않은 경우도 있기 때문에 꼭 확인하고 사용해야 한다.
+
+6. label
+    - 트랜잭션 애노테이션에 있는 값을 직접 읽어서 어떤 동작을 하고 싶을 때 사용할 수 있다. 일반적으로 사용하지 않는다.
+
+7. readOnly
+    - 트랜잭션은 기본적으로 읽기 쓰기가 모두 가능한 트랜잭션이 생성된다.
+    - readOnly=true 옵션을 사용하면 읽기 전용 트랜잭션이 생성된다. 이 경우 등록, 수정, 삭제가 안되고 읽기 기능만 작동한다.
+    - readOnly 옵션을 사용하면 읽기에서 다양한 성능 최적화가 발생할 수 있다.
+    - 주로 프레임워크, JDBC드라이버, 데이터베이스에서 적용된다.
+
+<br>
+
 ### 스프링부트 리소스 자동 등록
 1. 데이터소스: 스프링부트는 데이터소스를 dataSource라는 빈 이름으로 자동으로 등록해준다. 다음과 같이 application.propertie에 설정을 지정할 수 있다.
 ``` properties
@@ -295,6 +461,73 @@ spring.datasource.password=
 ```
 
 2. 트랜잭션 매니저: 스프링 부트는 적절한 트랜잭션 매니저(PlatformTransactionManager)를 자동으로 transactionManager라는 빈이름으로 등록해준다.
+
+<br>
+<br>
+
+
+### 트랜잭션 전파
+> 외부 트랜잭션이 수행중인데, 내부 트랜잭션이 추가로 수행될 때 어떻게 동작할지 결정하는 것을 트랜잭션 전파(propagation)라 한다. 스프링에서 이 경우 외부 트랜잭션과 내부 트랜잭션을 묶어서 하나의 트랜잭션을 만들어준다. 내부 트랜잭션이 외부 트랜잭션에 참여하는 것이다. 이것이 기본 동작이고, 옵션을 통해 다른 동작방식도 선택할 수 있다. 여기서 내부 트랜잭션과 외부 트랜잭션을 논리 트랜잭션이라고 부르고 이걸 묶는 것을 물리 트랜잭션이라고 부른다. 물리 트랜잭션은 우리가 이해하는 실제 데이터베이스에 적용되는 트랜잭션을 뜻하고 논리 트랜잭션은 트랜잭션 매니저를 통해 트랜잭션을 사용하는 단위이다.
+
+- 예를 들면 트랜잭션 AOP를 사용하는 LogRepository와 MemberRepository가 있는데 각각 `@Transactional` 달아준다면 서로 다른 트랜잭션에서 동작하는 것이고 이 둘을 사용하는 MemberService에만 `@Transactional `를 달아준다면 두개의 트랜잭션을 묶어서 단일 트랜잭션으로 사용하는 것이다. 만약 3개 다 `@Transactional`을 달아주면 하나의 물리 트랜잭션안에 3개의 논리 트랜잭션이 존재하는 것이고 외부 트랜잭션이 시작될 때, 즉 MemberService가 시작될때 신규 트랜잭션이 생기고 나머지 2개는 내부 트랜잭션으로 원래 존재하던 트랜잭션에 참여한다.
+
+<br>
+
+- 원칙
+```
+모든 논리 트랜잭션이 커밋되어야 물리 트랜잭션이 커밋된다.
+
+하나의 논리 트랜잭션이라도 롤백되면 물리 트랜잭션은 롤백된다.
+```
+
+<br>
+
+> 외부 트랜잭션만 물리 트랜잭션을 시작하고 커밋한다. 만약 내부 트랜잭션이 실제 물리 트랜잭션을 커밋하면 트랜잭션이 끝나버리기 때문에, 트랜잭션을 처음 시작한 외부 트랜잭션까지 이어갈 수 없다. 따라서 내부 트랜잭션은 DB 커넥션을 통한 물리 트랜잭션을 커밋하면 안된다.
+
+<br>
+
+- 다양한 트랜잭션 전파 옵션
+    - 실무에서는 대부분 REQUIRED 옵션을 사용한다. 그리고 아주 가끔 REQUIRES_NEW 을 사용하고, 나머지는 거의 사용하지 않는다. 그래서 나머지 옵션은 이런 것이 있다는 정도로만 알아두고 필요할 때 찾아보자.
+``` m
+1. REQUIRED
+> 가장 많이 사용하는 기본 설정이다. 기존 트랜잭션이 없으면 생성하고, 있으면 참여한다. 트랜잭션이 필수라는 의미로 이해하면 된다. (필수이기 때문에 없으면 만들고, 있으면 참여한다.)
+    - 기존 트랜잭션 없음: 새로운 트랜잭션을 생성한다.
+    - 기존 트랜잭션 있음: 기존 트랜잭션에 참여한다.
+
+2. REQUIRES_NEW
+> 항상 새로운 트랜잭션을 생성한다.
+    - 기존 트랜잭션 없음: 새로운 트랜잭션을 생성한다.
+    - 기존 트랜잭션 있음: 새로운 트랜잭션을 생성한다.
+
+3. SUPPORT
+> 트랜잭션을 지원한다는 뜻이다. 기존 트랜잭션이 없으면, 없는대로 진행하고, 있으면 참여한다.
+    - 기존 트랜잭션 없음: 트랜잭션 없이 진행한다.
+    - 기존 트랜잭션 있음: 기존 트랜잭션에 참여한다.
+
+4. NOT_SUPPORT
+> 트랜잭션을 지원하지 않는다는 의미이다.
+    - 기존 트랜잭션 없음: 트랜잭션 없이 진행한다.
+    - 기존 트랜잭션 있음: 트랜잭션 없이 진행한다. (기존 트랜잭션은 보류한다)
+
+5. MANDATORY
+> 의무사항이다. 트랜잭션이 반드시 있어야 한다. 기존 트랜잭션이 없으면 예외가 발생한다.
+    - 기존 트랜잭션 없음: IllegalTransactionStateException 예외 발생
+    - 기존 트랜잭션 있음: 기존 트랜잭션에 참여한다.
+
+6. NEVER
+> 트랜잭션을 사용하지 않는다는 의미이다. 기존 트랜잭션이 있으면 예외가 발생한다. 기존 트랜잭션도 허용하지 않는 강한 부정의 의미로 이해하면 된다.
+    - 기존 트랜잭션 없음: 트랜잭션 없이 진행한다.
+    - 기존 트랜잭션 있음: IllegalTransactionStateException 예외 발생
+
+7. NESTED
+    - 기존 트랜잭션 없음: 새로운 트랜잭션을 생성한다.
+    - 기존 트랜잭션 있음: 중첩 트랜잭션을 만든다.
+    - 중첩 트랜잭션은 외부 트랜잭션의 영향을 받지만, 중첩 트랜잭션은 외부에 영향을 주지 않는다.
+    - 중첩 트랜잭션이 롤백 되어도 외부 트랜잭션은 커밋할 수 있다.
+    - 외부 트랜잭션이 롤백 되면 중첩 트랜잭션도 함께 롤백된다.
+    - JDBC savepoint 기능을 사용한다. DB 드라이버에서 해당 기능을 지원하는지 확인이 필요하다.
+    - 중첩 트랜잭션은 JPA에서는 사용할 수 없다.
+```
 
 
 <br>
@@ -348,6 +581,8 @@ public Member save(Member member) {
     return member;
 }
 ```
+
+
 
 <br>
 <br>
@@ -424,6 +659,239 @@ this.jdbcInsert = new SimpleJdbcInsert(dataSource)
 <br>
 <br>
 
+
+
+
+## JPA (Java Persistence API)
+> 자바 진영의 ORM 기술 표준으로 SQL문을 직접 작성하지 않고 객체와 DB간의 매핑을 도와주는 기술이다. JPA를 사용하면 사용자가 작성한 엔티티(Entity) 클래스와 애노테이션(Annotation)을 분석하여 해당 엔티티를 데이터베이스의 테이블에 매핑하고, 사용자가 요청한 작업에 대한 SQL 쿼리를 자동으로 생성한다.
+
+- ORM :  Object-relational mapping(객체 관계 매핑)의 약자로 객체는 객체대로 관계형 DB는 관계형 DB대로 설계하도록 중간에서 매핑해주는 기술이다.
+
+<br>
+
+- JPA의 CRUD
+```
+• 저장: jpa.persist(member)
+
+• 조회: Member member = jpa.find(memberId)
+
+• 수정: member.setName(“변경할 이름”)
+
+• 삭제: jpa.remove(member)
+```
+
+<br>
+
+### JPA 사용
+> 시작하기전에 먼저 `implementation 'org.springframework.boot:spring-boot-starter-data-jpa'` 라이브러리를 추가해준다.
+
+- 객체와 테이블 매핑
+``` java
+@Data
+@Entity // JPA가 사용하는 객체라는 뜻
+public class Item {
+    // @Id : 테이블의 PK와 해당 필드를 매핑한다 
+    // @GeneratedValue(strategy = GenerationType.IDENTITY) : PK 생성 값을 데이터베이스에서 생성하는 IDENTITY 방식을 사용한다
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long id;
+
+    @Column(name = "item_name",length = 10) // @Column : 객체의 필드를 테이블의 컬럼과 매핑한다
+    private String itemName;
+    private Integer price;
+    private Integer quantity;
+
+    public Item() { // JPA는 기본생성자가 필수이다.
+    }
+
+    public Item(String itemName, Integer price, Integer quantity) {
+        this.itemName = itemName;
+        this.price = price;
+        this.quantity = quantity;
+    }
+}
+```
+
+<br>
+
+- 기능 작성
+``` java
+@Slf4j
+@Repository
+@Transactional // JPA에서 데이터 변경할때는 항상 트랜잭션 안에서 이루어져야 한다.
+public class JpaItemRepository implements ItemRepository {
+
+    // JPA의 모든 동작은 엔티티 매니저를 통해서 이루어진다. 엔티티 매니저는 내부에 데이터소스를 가지고 있고, 데이터베이스에 접근할 수 있다
+    private final EntityManager em;
+
+    public JpaItemRepository(EntityManager em) {
+        this.em = em;
+    }
+
+    @Override
+    public Item save(Item item) {
+        em.persist(item); // insert쿼리문을 생성하고 id도 자동으로 생성해준다.
+        return item;
+    }
+
+    @Override
+    public void update(Long itemId, ItemUpdateDto updateParam) {
+        Item findItem = em.find(Item.class, itemId); // 객체를 찾아와서 바꾸기만 해도 변경된걸 기반으로 업데이트 쿼리를 날린다.
+        findItem.setItemName(updateParam.getItemName());
+        findItem.setPrice(updateParam.getPrice());
+        findItem.setQuantity(updateParam.getQuantity());
+    }
+
+    @Override
+    public Optional<Item> findById(Long id) {
+        Item item = em.find(Item.class, id);
+        return Optional.ofNullable(item);
+    }
+
+    @Override
+    public List<Item> findAll(ItemSearchCond cond) {
+        String jpql = "select i from Item i"; // jpql문법은 sql과 거의 비슷하지만 테이블 대상이 아닌 엔티티 객체를 대상으로 한다.
+
+        Integer maxPrice = cond.getMaxPrice();
+        String itemName = cond.getItemName();
+
+        // 여전히 동적쿼리를 만들기 쉽지 않음
+        if (StringUtils.hasText(itemName) || maxPrice != null) {
+            jpql += " where";
+        }
+        boolean andFlag = false;
+        if (StringUtils.hasText(itemName)) {
+            jpql += " i.itemName like concat('%',:itemName,'%')";
+            andFlag = true;
+        }
+        if (maxPrice != null) {
+            if (andFlag) {
+                jpql += " and";
+            }
+            jpql += " i.price <= :maxPrice";
+        }
+        log.info("jpql={}", jpql);
+        TypedQuery<Item> query = em.createQuery(jpql, Item.class);
+        if (StringUtils.hasText(itemName)) {
+            query.setParameter("itemName", itemName);
+        }
+        if (maxPrice != null) {
+            query.setParameter("maxPrice", maxPrice);
+        }
+        return query.getResultList();
+    }
+}
+```
+
+<br>
+
+- 레포지토리 등록
+``` java
+@Configuration
+public class JpaConfig {
+    private final EntityManager em;
+
+    public JpaConfig(EntityManager em) {
+        this.em = em;
+    }
+
+    @Bean
+    public ItemService itemService() {
+        return new ItemServiceV1(itemRepository());
+    }
+
+    @Bean
+    public ItemRepository itemRepository() {
+        return new JpaItemRepository(em);
+    }
+}
+```
+
+<BR>
+
+> `@Repository`는 컴포넌트 스캔의 대상일 뿐 아니라 해당 애노테이션이 붙은 클래스는 예외 변환 AOP의 적용 대상이 된다. 스프링과 JPA를 함께 사용하는 경우 스프링은 JPA 예외 변환기(PersistenceExceptionTranslator)를 등록한다. 예외 변환 AOP 프록시는 JPA 관련 예외가 발생하면 JPA 예외 변환기를 통해 발생한 예외를 스프링 데이터 접근 예외로 변환한다.
+
+<br>
+
+
+### 스프링 데이터 JPA
+> 스프링 데이터 JPA는 기존 JPA를 편리하게 사용하도록 도와주는 라이브러리이다. 따라서 JPA를 어느정도 숙지하고 있어야 원할하게 사용할 수 있다. 마치 스프링부트와 스프링의 관계와 비슷하다. 자신이 작성한 JPQL이 어떤 쿼리로 생성될지 이해해야 한다.
+
+- 주요기능
+    - 공통 인터페이스 기능 : JpaRepository 인터페이스를 통해서 기본적인 CRUD 기능 제공한다. 스프링 데이터 JPA는 리포지토리 인터페이스를 구현하는 프록시 객체를 동적으로 생성한다.
+        
+    - 쿼리 메서드 기능 : 인터페이스에 메서드만 적어두면, 메서드 이름을 분석해서 쿼리를 자동으로 만들고 실행해주는 기능을 제공한다. 규칙에 따라 작성해야 한다.
+
+<br>
+
+- 적용 1
+    - `implementation 'org.springframework.boot:spring-boot-starter-data-jpa'` 라이브러리 추가
+``` java
+public interface SpringDataJpaItemRepository extends JpaRepository<Item,Long> { // 기본적인 CRUD는 인터페이스 상속받아서 이미 완성
+    List<Item> findByItemNameLike(String itemName); // 상품명이 같은거만 찾기
+    List<Item> findByPriceLessThanEqual(Integer price); // 해당 가격 이하만 찾기
+
+    // 쿼리 메서드
+    List<Item> findByItemNameLikeAndPriceLessThanEqual(String itemName);
+
+    // 쿼리 직접 실행
+    @Query("select i from Item where i.itemName like :itemName and i.price <= :price")
+    List<Item> findItems(@Param("itemName") String itemName,@Param("price") Integer price); // @Param 꼭 넣어줘야 한다.
+}
+```
+
+<br>
+
+- 적용 2
+``` java
+@Repository
+@RequiredArgsConstructor
+@Transactional
+public class JpaItemRepositoryV2 implements ItemRepository {
+
+    private final SpringDataJpaItemRepository repository;
+
+    @Override
+    public Item save(Item item) {
+        return repository.save(item);
+    }
+
+    @Override
+    public void update(Long itemId, ItemUpdateDto updateParam) {
+        Item findItem = repository.findById(itemId).orElseThrow(); // orElseThrow()는 Optional 객체에 저장된 값이 null인 경우 예외를
+                                                                   // 발생시키는 역할
+        findItem.setItemName(updateParam.getItemName());
+        findItem.setPrice(updateParam.getPrice());
+        findItem.setQuantity(updateParam.getQuantity());
+    }
+
+    @Override
+    public Optional<Item> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public List<Item> findAll(ItemSearchCond cond) {    // 여전히 동적쿼리는 복잡하다. 뒤에 나오는 querydsl로 해결한다.
+        String itemName = cond.getItemName();
+        Integer maxPrice = cond.getMaxPrice();
+        if (StringUtils.hasText(itemName) && maxPrice != null) {
+            // return repository.findByItemNameLikeAndPriceLessThanEqual("%" + itemName +// "%", maxPrice);
+            return repository.findItems("%" + itemName + "%", maxPrice);
+        } else if (StringUtils.hasText(itemName)) {
+            return repository.findByItemNameLike("%" + itemName + "%");
+        } else if (maxPrice != null) {
+            return repository.findByPriceLessThanEqual(maxPrice);
+        } else {
+            return repository.findAll();
+        }
+    }
+}
+
+```
+
+<br>
+<br>
+<br>
+
 ## 테스트용 데이터베이스 분리
 > 로컬에서 사용하는 애플리케이션 서버와 테스트에서 같은 데이터베이스를 사용하면 로컬에 사용되는 데이터때문에 테스트에서 문제가 발생할 수 있다. 이런 문제를 해결하려면 테스트를 다른 환경과 철저하게 분리해야 한다.
 
@@ -488,12 +956,100 @@ create table item
 );
 ```
 
+<br>
+<br>
+<br>
+
+## QueryDSL
+> JPA, MongoDB,SQL 같은 기술들을 위해 type-safe SQL을 만드는 프레임워크이다. type-safe SQL는 컴파일 시점에 타입 관련된 오류를 방지하게 해준다. Querydsl로 복잡한 조회 기능(복잡한 쿼리나 동적쿼리)을 보완할 수 있다. 단순한 경우는 SpringDataJPA로 복잡한 경우는 Querydsl을 사용한다.
+
+<br>
+
+- 라이브러리 추가
+``` java
+implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta' 
+annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+clean { //자동 생성된 Q클래스 gradle clean으로 제거
+    delete file('src/main/generated')
+}
+```
+- 라이브러리 추가 후 작업
+1. Gradle -> Tasks -> build -> clean 
+2. Gradle -> Tasks -> other -> compileJava 
+3. build -> generated -> sources -> annotationProcessor -> java/main 하위에 Q 타입이 생성된다. 
+4. `gradle clean` 을 수행하면 build 폴더 자체가 삭제된다. 따라서 별도의 설정은 없어도 된다. 
+
+    - 프로젝트를 실행했을 때도 Q 타입이 생성된다.
+    - querydsl gradle 로 검색하면 본인 환경에 맞는 대안을 금방 찾을 수 있다.
 
 
+<br>
+<br>
 
+- Repository에 QueryDsl 적용하기
+``` java
+@Repository
+@Transactional
+public class JpaItemRepositoryV3 implements ItemRepository {
 
+    private final EntityManager em;
+    private final JPAQueryFactory query;
 
+    public JpaItemRepositoryV3(EntityManager em) {
+        this.em = em;
+        this.query = new JPAQueryFactory(em);   // QueryDsl을 사용하기 위한 작업
+    }
 
+    @Override
+    public Item save(Item item) {
+        em.persist(item);
+        return item;
+    }
+
+    @Override
+    public void update(Long itemId, ItemUpdateDto updateParam) {
+        Item findItem = em.find(Item.class, itemId);
+        findItem.setItemName(updateParam.getItemName());
+        findItem.setPrice(updateParam.getPrice());
+        findItem.setQuantity(updateParam.getQuantity());
+    }
+
+    @Override
+    public Optional<Item> findById(Long id) {
+        Item item = em.find(Item.class, id);
+        return Optional.ofNullable(item);
+    }
+
+    @Override
+    public List<Item> findAll(ItemSearchCond cond) {
+        String itemName = cond.getItemName();
+        Integer maxPrice = cond.getMaxPrice();
+        List<Item> result = query
+                .select(item)
+                .from(item)
+                .where(likeItemName(itemName), maxPrice(maxPrice))  // 누가봐도 이해하기 쉽게 메서드로 추출하여 사용
+                .fetch();
+        return result;
+    }
+
+    private BooleanExpression likeItemName(String itemName) {
+        if (StringUtils.hasText(itemName)) {
+            return item.itemName.like("%" + itemName + "%");
+        }
+        return null;
+    }
+
+    private BooleanExpression maxPrice(Integer maxPrice) {
+        if (maxPrice != null) {
+            return item.price.loe(maxPrice);
+        }
+        return null;
+    }
+}
+```
 
 
 
