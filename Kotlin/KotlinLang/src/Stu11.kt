@@ -1,2 +1,3 @@
-class Stu11 {
+fun isDir(path: String): Boolean{
+    return  path.endsWith("/")
 }
