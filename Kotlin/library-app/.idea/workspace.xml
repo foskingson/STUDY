@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8751d30d-752e-4a4a-b7b6-63348e82fdd8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/LibraryAppApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/LibraryAppApplication.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/calculator/Calculator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/config/QuerydslConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/config/QuerydslConfig.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/book/BookController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/book/BookController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/user/UserController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/user/UserController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/Book.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/Book.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/User.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustom.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustom.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustomImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustomImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistoryRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistoryRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanStatus.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanStatus.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookLoanRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookLoanRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookReturnRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookReturnRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/response/BookStatResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/response/BookStatResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserCreateRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserCreateRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserUpdateRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserUpdateRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserLoanHistoryResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserLoanHistoryResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/book/BookQuerydslRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/book/BookQuerydslRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/user/loanhistory/UserLoanHistoryQuerydslRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/user/loanhistory/UserLoanHistoryQuerydslRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/book/BookService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/book/BookService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/user/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/user/UserService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/util/ExceptionUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/util/ExceptionUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/JunitTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/calculator/CalculatorTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/calculator/JunitCalculatorTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/book/BookServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/book/BookServiceTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/user/UserServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/user/UserServiceTest.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="library-app" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="library-app" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="library-app" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="library-app" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="verification" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+        <option value="Kotlin File" />
+        <option value="Kotlin Data Class" />
+        <option value="JUnit5 Test Class" />
+        <option value="Kotlin Interface" />
+        <option value="Kotlin Enum" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/2.6.8/a214bc83495277119f0d543b5c6069ecda480340/spring-boot-test-2.6.8-sources.jar!/org/springframework/boot/test/context/AnnotatedClassFinder.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/2.6.8/a214bc83495277119f0d543b5c6069ecda480340/spring-boot-test-2.6.8-sources.jar!/org/springframework/boot/test/context/SpringBootTestContextBootstrapper.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.3.20/fc265011d79b4a4b3504d70003a0acbb326bce97/spring-test-5.3.20-sources.jar!/org/springframework/test/context/MergedContextConfiguration.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="JavaAutoRunManager">
+    <enabled-run-configurations>
+      <run-configuration type="GradleRunConfiguration" name="library-app [test]" />
+    </enabled-run-configurations>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="29n40xTHFSIxclVDzF2cBynJetr" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="foldersAlwaysOnTop" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Gradle.Build library-app.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.library-app [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.library-app [test].executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BookServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BookServiceTest.분야별책통계확인.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BookServiceTest.책대여권수정상확인.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BookServiceTest.책대출.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BookServiceTest.책저장.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest.대출기록많은사람응답.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest.대출기록없는사람응답포함.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.UserServiceTest.유저삭제.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest.유저수정.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest.유저저장.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest.유저조회.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.CalcTestKt.executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.LibraryAppApplication.executor&quot;: &quot;Run&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;D:/STUDY/Kotlin/library-app/src/test/kotlin/com/group/libraryapp/service&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/STUDY/Kotlin/library-app/src/test/kotlin/com/group/libraryapp&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.36014625&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;7a9180757339ae4c083f8443ffe3f3ed&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/static/v2" />
+      <recent name="$PROJECT_DIR$/src/main/resources/static/v1" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/static/v1" />
+      <recent name="$PROJECT_DIR$/src/main/resources/static/v2" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.group.libraryapp.controller.book" />
+      <recent name="com.group.libraryapp.domain.book" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.group.libraryapp.service.book" />
+      <recent name="com.group.libraryapp.service.user" />
+      <recent name="com.group.libraryapp.calculator" />
+      <recent name="com.group.libraryapp.serivce.user" />
+      <recent name="com.lannstark.libraryapp.service.user" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.lannstark.libraryapp.dto.book.request" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.BookServiceTest">
+    <configuration name="library-app [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="library-app [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="BookServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library-app.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.group.libraryapp.service.book.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.group.libraryapp.service.book" />
+      <option name="MAIN_CLASS_NAME" value="com.group.libraryapp.service.book.BookServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BookServiceTest.분야별책통계확인" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library-app.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.group.libraryapp.service.book.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.group.libraryapp.service.book" />
+      <option name="MAIN_CLASS_NAME" value="com.group.libraryapp.service.book.BookServiceTest" />
+      <option name="METHOD_NAME" value="분야별책통계확인" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BookServiceTest.책대여권수정상확인" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library-app.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.group.libraryapp.service.book.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.group.libraryapp.service.book" />
+      <option name="MAIN_CLASS_NAME" value="com.group.libraryapp.service.book.BookServiceTest" />
+      <option name="METHOD_NAME" value="책대여권수정상확인" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library-app.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.group.libraryapp.service.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.group.libraryapp.service.user" />
+      <option name="MAIN_CLASS_NAME" value="com.group.libraryapp.service.user.UserServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest.대출기록없는사람응답포함" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library-app.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.group.libraryapp.service.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.group.libraryapp.service.user" />
+      <option name="MAIN_CLASS_NAME" value="com.group.libraryapp.service.user.UserServiceTest" />
+      <option name="METHOD_NAME" value="대출기록없는사람응답포함" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest.유저조회" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library-app.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.group.libraryapp.service.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.group.libraryapp.service.user" />
+      <option name="MAIN_CLASS_NAME" value="com.group.libraryapp.service.user.UserServiceTest" />
+      <option name="METHOD_NAME" value="유저조회" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest.유저삭제" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="library-app.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.group.libraryapp.service.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.group.libraryapp.service.user" />
+      <option name="MAIN_CLASS_NAME" value="com.group.libraryapp.service.user.UserServiceTest" />
+      <option name="METHOD_NAME" value="유저삭제" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LibraryAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ACTIVE_PROFILES" />
+      <module name="library-app.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.group.libraryapp.LibraryAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.library-app [build]" />
+      <item itemvalue="Gradle.library-app [test]" />
+      <item itemvalue="JUnit.BookServiceTest" />
+      <item itemvalue="JUnit.UserServiceTest" />
+      <item itemvalue="JUnit.BookServiceTest.분야별책통계확인" />
+      <item itemvalue="Spring Boot.LibraryAppApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.BookServiceTest" />
+        <item itemvalue="JUnit.UserServiceTest" />
+        <item itemvalue="JUnit.BookServiceTest.분야별책통계확인" />
+        <item itemvalue="Gradle.library-app [test]" />
+        <item itemvalue="Gradle.library-app [build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-11.0.22-corretto-11.0.22-4caba194b151-868cef46" />
+        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-23eed401" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8751d30d-752e-4a4a-b7b6-63348e82fdd8" name="Changes" comment="" />
+      <created>1653735296354</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1653735296354</updated>
+      <workItem from="1653735297728" duration="11110000" />
+      <workItem from="1653865696973" duration="820000" />
+      <workItem from="1653867113383" duration="1224000" />
+      <workItem from="1653870068083" duration="12000" />
+      <workItem from="1653871683481" duration="926000" />
+      <workItem from="1653988382331" duration="835000" />
+      <workItem from="1653989234612" duration="5795000" />
+      <workItem from="1654070506245" duration="9873000" />
+      <workItem from="1654130369574" duration="2862000" />
+      <workItem from="1654156696211" duration="1497000" />
+      <workItem from="1654158263073" duration="3476000" />
+      <workItem from="1654262317129" duration="4102000" />
+      <workItem from="1654309598410" duration="1192000" />
+      <workItem from="1654345102028" duration="564000" />
+      <workItem from="1654400681850" duration="6476000" />
+      <workItem from="1654413887692" duration="2918000" />
+      <workItem from="1654435096096" duration="1397000" />
+      <workItem from="1654437186607" duration="3460000" />
+      <workItem from="1654443044839" duration="119000" />
+      <workItem from="1654443176460" duration="1500000" />
+      <workItem from="1654480768900" duration="14661000" />
+      <workItem from="1654562589060" duration="1565000" />
+      <workItem from="1654577737114" duration="2145000" />
+      <workItem from="1654581643643" duration="1350000" />
+      <workItem from="1654594448427" duration="3754000" />
+      <workItem from="1654949339586" duration="1077000" />
+      <workItem from="1654995670041" duration="10662000" />
+      <workItem from="1655044898679" duration="1851000" />
+      <workItem from="1655112425032" duration="2652000" />
+      <workItem from="1655217994174" duration="64000" />
+      <workItem from="1655218097877" duration="3767000" />
+      <workItem from="1655421999594" duration="25000" />
+      <workItem from="1655523020488" duration="186000" />
+      <workItem from="1655523484999" duration="1753000" />
+      <workItem from="1655525763559" duration="6607000" />
+      <workItem from="1655890194803" duration="1769000" />
+      <workItem from="1655895511276" duration="485000" />
+      <workItem from="1655896017078" duration="1837000" />
+      <workItem from="1655945832737" duration="17000" />
+      <workItem from="1656676231897" duration="6710000" />
+      <workItem from="1656767672291" duration="202000" />
+      <workItem from="1656815017223" duration="4999000" />
+      <workItem from="1657015148156" duration="3295000" />
+      <workItem from="1657436708252" duration="5784000" />
+      <workItem from="1657676514815" duration="916000" />
+      <workItem from="1657813270546" duration="3206000" />
+      <workItem from="1660302136884" duration="917000" />
+      <workItem from="1723952543305" duration="16860000" />
+      <workItem from="1724039176137" duration="13335000" />
+      <workItem from="1724067430748" duration="1588000" />
+      <workItem from="1724123036329" duration="12885000" />
+      <workItem from="1724217030272" duration="8780000" />
+      <workItem from="1724240736622" duration="2668000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-function">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/book/BookServiceTest.kt</url>
+          <line>79</line>
+          <properties class="com.group.libraryapp.service.book.BookServiceTest" method="분야별책통계확인">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
