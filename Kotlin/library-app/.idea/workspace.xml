@@ -5,45 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8751d30d-752e-4a4a-b7b6-63348e82fdd8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/LibraryAppApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/LibraryAppApplication.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/calculator/Calculator.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/config/QuerydslConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/config/QuerydslConfig.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/book/BookController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/book/BookController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/user/UserController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/controller/user/UserController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/Book.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/Book.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/book/BookType.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/User.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustom.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustom.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustomImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/UserRepositoryCustomImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistoryRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanHistoryRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanStatus.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/domain/user/loanhistory/UserLoanStatus.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookLoanRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookLoanRequest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookRequest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookReturnRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/request/BookReturnRequest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/response/BookStatResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/book/response/BookStatResponse.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserCreateRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserCreateRequest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserUpdateRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/request/UserUpdateRequest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserLoanHistoryResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserLoanHistoryResponse.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/dto/user/response/UserResponse.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/book/BookQuerydslRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/book/BookQuerydslRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/user/loanhistory/UserLoanHistoryQuerydslRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/repository/user/loanhistory/UserLoanHistoryQuerydslRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/book/BookService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/book/BookService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/user/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/service/user/UserService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/util/ExceptionUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/group/libraryapp/util/ExceptionUtils.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/JunitTest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/calculator/CalculatorTest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/calculator/JunitCalculatorTest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/book/BookServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/book/BookServiceTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/user/UserServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/com/group/libraryapp/service/user/UserServiceTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -375,6 +337,7 @@
     <list>
       <item itemvalue="Gradle.library-app [build]" />
       <item itemvalue="Gradle.library-app [test]" />
+      <item itemvalue="JUnit.UserServiceTest.대출기록없는사람응답포함" />
       <item itemvalue="JUnit.BookServiceTest" />
       <item itemvalue="JUnit.UserServiceTest" />
       <item itemvalue="JUnit.BookServiceTest.분야별책통계확인" />
@@ -459,6 +422,7 @@
       <workItem from="1724123036329" duration="12885000" />
       <workItem from="1724217030272" duration="8780000" />
       <workItem from="1724240736622" duration="2668000" />
+      <workItem from="1724562095502" duration="78000" />
     </task>
     <servers />
   </component>
