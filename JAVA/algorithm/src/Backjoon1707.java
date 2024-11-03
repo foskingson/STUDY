@@ -49,7 +49,7 @@ public class Backjoon1707 { // 이분 그래프 판별하기
         for (int u : graph[v]) {
             if (visited[u] == 0) { // 아직 방문하지 않은 노드
                 if (!dfs(u, graph, nextCheck, visited)) {
-                    return false; // 이분 그래프가 아님
+                    return false; 
                 }
             } else if (visited[u] == check) { // 인접한 노드가 같은 색일 경우
                 return false;
