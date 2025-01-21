@@ -9,7 +9,7 @@
 - [DevOps](https://github.com/foskingson/STUDY/tree/main/DevOps).
 - [JAVA](https://github.com/foskingson/STUDY/tree/main/JAVA)
 - [Kotlin](https://github.com/foskingson/STUDY/tree/main/Kotlin).
-- [PM] (https://github.com/foskingson/STUDY/tree/main/PM).
+- [PM](https://github.com/foskingson/STUDY/tree/main/PM).
 - [Security](https://github.com/foskingson/STUDY/tree/main/Security)
 - [WEB](https://github.com/foskingson/STUDY/tree/main/WEB)
 
