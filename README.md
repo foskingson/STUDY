@@ -6,7 +6,10 @@
 - [Algorithmn](https://github.com/foskingson/STUDY/tree/main/Algorithmn)
 - [CS](https://github.com/foskingson/STUDY/tree/main/CS)
 - [Database](https://github.com/foskingson/STUDY/tree/main/Database)
+- [DevOps](https://github.com/foskingson/STUDY/tree/main/DevOps).
 - [JAVA](https://github.com/foskingson/STUDY/tree/main/JAVA)
+- [Kotlin](https://github.com/foskingson/STUDY/tree/main/Kotlin).
+- [PM] (https://github.com/foskingson/STUDY/tree/main/PM).
 - [Security](https://github.com/foskingson/STUDY/tree/main/Security)
 - [WEB](https://github.com/foskingson/STUDY/tree/main/WEB)
 
