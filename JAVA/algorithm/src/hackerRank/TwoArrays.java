@@ -25,20 +25,15 @@ class Result2 {
      */
 
     public static String twoArrays(int k, List<Integer> A, List<Integer> B) {
-        int count = 0 ;
-        for (int a : A) {
-            for (int b : B) {
-                if (a+b>=k) {
-                    count++;
-                }
+        Collections.sort(A,(a,b)-> b-a);
+        Collections.sort(B);
+
+        for (int i = 0; i < A.size(); i++) {
+            if (A.get(i)+B.get(i)<k) {
+                return "NO";
             }
         }
-
-        if (count>=3) {
-            return "YES";
-        }else{
-            return "NO";
-        }
+        return "YES";
     }
 
 }
