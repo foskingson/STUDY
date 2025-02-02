@@ -19,6 +19,6 @@ public class SumXor {
     }
 
     public static void main(String[] args) {
-        System.out.println(sumXor(4)); // 4의 경우 출력값은 3
+        System.out.println(sumXor(4)); 
     }
 }
