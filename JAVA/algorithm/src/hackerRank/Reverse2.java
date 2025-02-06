@@ -17,9 +17,9 @@ public class Reverse2 {
         }
     
         return prev;
-    }
+}
 
-    class DoublyLinkedListNode {
+class DoublyLinkedListNode {
         int data;
         DoublyLinkedListNode next;
         DoublyLinkedListNode prev;

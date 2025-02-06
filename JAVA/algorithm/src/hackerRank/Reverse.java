@@ -12,9 +12,13 @@ public class Reverse {
         return prev;
     }
 
-    class SinglyLinkedListNode {
-        int data;
-        SinglyLinkedListNode next;
-    }
-}
 
+}
+class SinglyLinkedListNode {
+    int data;
+    SinglyLinkedListNode next;
+    public SinglyLinkedListNode(int data) {
+        this.data = data;
+    }
+    
+}
