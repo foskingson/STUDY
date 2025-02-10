@@ -5,28 +5,28 @@ import java.util.List;
 
 public class Pairs {
     public static int pairs(int k, List<Integer> arr) {
-        Collections.sort(arr);
-        int left=0, right=arr.size()-1;
-        int count = 0;
-
-        while (right<arr.size()) {
-            int temp = arr.get(right)-arr.get(left);
-
-            if (temp==k) {
-                count++;
-                left++;
+        Collections.sort(arr); 
+        int left = 0, right = 1, count = 0;
+        int n = arr.size();
+        
+        while (right < n) {
+            int diff = arr.get(right) - arr.get(left);
+    
+            if (diff == k) { 
+                count++; 
+                left++; 
                 right++;
-            }else if(temp>k){
-                left++;
-            }else{
-                right--;
+            } else if (diff < k) { 
+                right++; 
+            } else { 
+                left++; 
             }
-
-            if (left == right) { // left와 right가 같아지면 right 증가
+    
+            if (left == right) {
                 right++;
             }
         }
-
+        
         return count;
     }
 }

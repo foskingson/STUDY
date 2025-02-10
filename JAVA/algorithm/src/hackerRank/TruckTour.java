@@ -11,7 +11,7 @@ public class TruckTour {
             sum += petrolpumps.get(i).get(0)-petrolpumps.get(i).get(1);
             if (sum<0){
                 sum=0;
-                res++;
+                res=i+1;
             } 
         }
         return res;
