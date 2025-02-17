@@ -1,7 +1,5 @@
 package hackerRank;
 
-import org.w3c.dom.Node;
-
 class Huff{
     public  int frequency; // the frequency of this tree
     public  char data;
@@ -22,8 +20,6 @@ public class HuffmanDecoding {
                 System.out.print(current.data);
                 current = root;
             }
-            
         }
-       
     }
 }

@@ -3,7 +3,7 @@ package neetCode250;
 public class InvertTree {
     public TreeNode invertTree(TreeNode root) {
         if (root==null) {
-            return;
+            return root;
         }
         invertTree(root.left);
         invertTree(root.right);
